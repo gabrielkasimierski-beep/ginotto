@@ -11,6 +11,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--texto);color:var(--ink);background:var(--cream);background-image:var(--papel);overflow-x:hidden;font-size:17px;line-height:1.4}
+@supports (overflow:clip){html,body{overflow-x:clip}}   /* sin crear scroll interno: el sticky de "por dentro" sigue andando */
 img{max-width:100%}
 a{color:inherit}
 .price{font-weight:700;font-size:1.35rem;color:var(--vio);white-space:nowrap}
@@ -180,7 +181,8 @@ footer p{margin:4px 0}
   .mundo:nth-child(even){grid-template-columns:1fr 1.05fr}
   .mundo:nth-child(even) .mundo__escena{order:2}
   .mundo__escena{width:100%;max-width:640px;margin:0 auto}
-  .mundo__info{text-align:left;margin-top:0}
+  .mundo__info{text-align:left;margin-top:0;min-width:0}
+  .mundo__info h3{font-size:clamp(2.2rem,4.6vw,4.2rem)}
   .mundo__desc{margin-left:0}
   .mundo__pie{align-items:flex-start}
   .mundo__fantasma{font-size:min(var(--fs-d,16vw),300px);text-align:left;padding-left:3vw}

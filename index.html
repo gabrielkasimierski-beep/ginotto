@@ -2,52 +2,109 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ginotto Burger — Las mejores que vas a probar</title>
 <meta name="description" content="Ginotto Burger, hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Cheeseburger, Gino, Otto, veggie y combos. Pedí online.">
+<meta name="theme-color" content="#4B2E83">
 <link rel="icon" href="assets/logo.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Permanent+Marker&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
 <div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
-<header class="hero" id="top">
-  <svg class="splat s1" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <svg class="splat s2" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <div class="hero-inner">
-    <img class="hero-logo" src="assets/logo.webp" alt="Ginotto Burger, jirafa con gorra violeta" width="450" height="450">
-    <p class="kicker">Hamburguesería · Villa Urquiza</p>
-    <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
-    <div class="hero-cta">
-      <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
-      <a class="btn btn-ghost" href="#carta">Ver la carta</a>
-    </div>
-    <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+
+<!-- ============ HERO: la entrada, en capas ============ -->
+<header class="hero" id="top" data-escena>
+  <div class="hero__papel" aria-hidden="true"></div>
+  <svg class="spl spl--vio" data-z="0.25" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
+  <svg class="spl spl--ora" data-z="0.4" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
+  <svg class="spl spl--ink" data-z="0.15" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
+
+  <p class="hero__kicker"><span>Hamburguesería</span> · Villa Urquiza</p>
+  <h1 class="hero__titulo" data-z="0.5">
+    <span class="t1">Las mejores</span>
+    <span class="t2">que vas a probar</span>
+  </h1>
+
+  <div class="hero__escena">
+    <!-- detrás de la burga -->
+    <img class="prop" data-z="0.7" style="--x:4%;--y:26%;--w:30%;--r:-24deg;--d:.35s" src="assets/props/bacon.webp" alt="" aria-hidden="true">
+    <img class="prop" data-z="0.8" style="--x:72%;--y:18%;--w:28%;--r:18deg;--d:.5s" src="assets/props/cheddar.webp" alt="" aria-hidden="true">
+    <img class="hero__burga" data-z="1" src="assets/gino-doble-cut.webp" alt="Gino Doble: doble carne, cheddar, bacon y aderezo Gino" width="1024" height="1024" fetchpriority="high">
+    <div class="hero__sombra" aria-hidden="true"></div>
+    <!-- delante de la burga -->
+    <img class="prop prop--f" data-z="1.7" style="--x:-6%;--y:60%;--w:34%;--r:-18deg;--d:.6s" src="assets/props/medallon.webp" alt="" aria-hidden="true">
+    <img class="prop prop--f" data-z="1.45" style="--x:76%;--y:64%;--w:34%;--r:16deg;--d:.75s" src="assets/props/cheddar-pila.webp" alt="" aria-hidden="true">
+    <img class="prop prop--f" data-z="2" style="--x:70%;--y:-6%;--w:34%;--r:30deg;--d:.9s" src="assets/props/bacon.webp" alt="" aria-hidden="true">
+    <img class="prop prop--f" data-z="1.5" style="--x:4%;--y:86%;--w:26%;--r:-12deg;--d:1s" src="assets/props/pan.webp" alt="" aria-hidden="true">
   </div>
-  <div class="hero-burgers" aria-hidden="true">
-    <img src="assets/cheese-doble-cream.webp" alt="" class="hb hb1">
-    <img src="assets/gino-doble-cream.webp" alt="" class="hb hb2">
-    <img src="assets/otto-doble-cream.webp" alt="" class="hb hb3">
+
+  <img class="hero__jirafa" data-z="1.2" src="assets/logo.webp" alt="Ginotto Burger, jirafa con gorra violeta" width="450" height="450">
+
+  <div class="hero__cta">
+    <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
+    <a class="btn btn-ghost" href="#burgas">Ver la carta</a>
   </div>
-  <div class="drip"></div>
+  <p class="fudo-link hero__fudo">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
 </header>
 
+<div class="cinta" aria-hidden="true">
+  <div class="cinta__pista">
+    <span>Smash</span><i>✦</i><span>Cheddar</span><i>✦</i><span>Bacon</span><i>✦</i><span>Gino</span><i>✦</i><span>Otto</span><i>✦</i><span>Veggie</span><i>✦</i>
+    <span>Smash</span><i>✦</i><span>Cheddar</span><i>✦</i><span>Bacon</span><i>✦</i><span>Gino</span><i>✦</i><span>Otto</span><i>✦</i><span>Veggie</span><i>✦</i>
+  </div>
+</div>
+
 <nav class="cats" aria-label="Categorías de la carta">
-  <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#acompanamiento">Acompañamiento</a><a href="#extra">Extra</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a>
+  <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#por-dentro">Por dentro</a><a href="#acompanamiento">Acompañamiento</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a>
 </nav>
 
 <main id="carta">
-  <section id="burgas" class="sec">
-    <h2 class="title"><span>Burgas</span></h2>
-    <p class="sub">Carne smash, cheddar y mucha actitud. Simple o doble.</p>
-    <div class="grid" id="grid-burgas"></div>
-    <!-- TODO 3D (Opus): visor 3D + AR de la Gino Doble. Proveer assets/gino-doble.glb y reemplazar este bloque
-         (sacar el atributo hidden) con:
-         <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-         <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate shadow-intensity="1" poster="assets/gino-doble-cream.webp"></model-viewer> -->
+
+  <!-- ============ LA CARTA: un mundo de color por burga ============ -->
+  <section id="burgas" class="grupo">
+    <header class="grupo__cabeza">
+      <h2 class="title"><span>Burgas</span></h2>
+      <p class="sub">Carne smash, cheddar y mucha actitud. Simple o doble.</p>
+    </header>
+    <div class="mundos" id="grid-burgas"></div>
+  </section>
+
+  <section id="veggie" class="grupo">
+    <header class="grupo__cabeza">
+      <h2 class="title purple"><span>Veggie</span></h2>
+      <p class="sub">Medallón NotBurger. Mismo sabor Ginotto.</p>
+    </header>
+    <div class="mundos" id="grid-veggie"></div>
+  </section>
+
+  <!-- ============ POR DENTRO: la Gino Doble se arma con el scroll ============ -->
+  <section id="por-dentro" class="dentro" aria-label="La Gino Doble por dentro">
+    <div class="dentro__pista">
+      <div class="dentro__fondo" aria-hidden="true"></div>
+      <h2 class="dentro__titulo" aria-hidden="true">Por dentro</h2>
+      <div class="dentro__escena">
+        <canvas class="dentro__lienzo" id="dentro-lienzo" aria-hidden="true"></canvas>
+        <img class="dentro__estatica" id="dentro-estatica" src="assets/gino-doble-cut.webp" alt="Gino Doble" width="1024" height="1024" loading="lazy">
+      </div>
+      <ol class="dentro__capas" id="dentro-capas" aria-hidden="true">
+        <li style="--i:0">Pan brioche</li>
+        <li style="--i:1">Aderezo Gino</li>
+        <li style="--i:2">Bacon crocante</li>
+        <li style="--i:3">Cheddar derretido</li>
+        <li style="--i:4">Doble carne smash</li>
+      </ol>
+      <p class="dentro__nota">Gino Doble · $18.000</p>
+      <div class="add dentro__add" data-add="gino-doble"></div>
+    </div>
+  </section>
+
+  <!-- ============ Para ver la Gino en tu mesa ============ -->
+  <section class="sec viewer3d-sec">
     <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
     <div id="gino-3d" class="viewer3d">
       <h3>Mirá la Gino Doble en 3D</h3>
@@ -63,12 +120,6 @@
         </model-viewer>
       </div>
     </div>
-  </section>
-
-  <section id="veggie" class="sec">
-    <h2 class="title purple"><span>Veggie</span></h2>
-    <p class="sub">Medallón NotBurger. Mismo sabor Ginotto.</p>
-    <div class="grid" id="grid-veggie"></div>
   </section>
 
   <section class="sec duo">
@@ -152,5 +203,6 @@
 <script src="store.js"></script>
 <script src="app.js"></script>
 <script src="cart.js"></script>
+<script src="fx.js"></script>
 </body>
 </html>

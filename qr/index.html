@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>QR Ginotto</title>
+<link rel="icon" href="/assets/logo.webp" type="image/webp">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Permanent+Marker&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--vio:#4B2E83;--ora:#F2791E;--cream:#F6EBD3;--ink:#1d1428}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Barlow',system-ui,sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+.bar{max-width:900px;margin:0 auto;padding:16px;display:grid;gap:10px}
+.bar label{font-weight:700}
+.bar input{width:100%;font:inherit;padding:.6em .8em;border:3px solid var(--ink);border-radius:12px}
+.bar small{color:#5b4a6b}
+.btn{font-family:'Luckiest Guy',cursive;letter-spacing:.04em;font-size:1.2rem;padding:.6em 1.4em;border-radius:14px;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);background:var(--ora);color:#fff;cursor:pointer;text-shadow:2px 2px 0 var(--ink);justify-self:start;min-height:48px}
+.sheets{max-width:900px;margin:0 auto;padding:0 16px 40px;display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.sheet{background:#fff;border:4px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 var(--vio);padding:26px 20px;text-align:center;break-inside:avoid}
+.sheet img.logo{width:130px;height:auto}
+.sheet h1{font-family:'Luckiest Guy',cursive;font-weight:400;font-size:clamp(2.2rem,9vw,3.2rem);margin:6px 0 2px;color:var(--vio);text-shadow:3px 3px 0 var(--ora);text-transform:uppercase;line-height:1}
+.sheet .tag{font-family:'Permanent Marker',cursive;color:var(--ora);margin:0 0 14px;font-size:1.15rem}
+.qr{display:inline-block;border:4px solid var(--ink);border-radius:14px;padding:10px;background:#fff;line-height:0}.qr img,.qr canvas{width:min(70vw,280px)!important;height:auto!important}
+.sheet .url{font-size:.8rem;color:#5b4a6b;word-break:break-all;margin:10px 0 0}
+.sheet.panel{box-shadow:8px 8px 0 var(--ora)}
+.sheet.panel h1{font-size:clamp(1.8rem,7vw,2.4rem)}
+@media print{
+ body{background:#fff}
+ .bar{display:none}
+ .sheets{display:block;max-width:none;padding:0}
+ .sheet{box-shadow:none;margin:0 auto 20px;max-width:560px;page-break-after:always}
+ .sheet:last-child{page-break-after:auto}
+ .qr img,.qr canvas{width:360px!important}
+ .sheet.panel{display:none}
+ body.con-panel .sheet.panel{display:block}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="bar">
+  <label for="u">URL de la carta (para probar en el celu, cambiá localhost por la IP de la compu)</label>
+  <input id="u" inputmode="url">
+  <small>Al publicar, cambiá la constante CARTA_URL arriba de este archivo por el dominio real.</small>
+  <label><input type="checkbox" id="cp" style="width:auto"> Incluir QR del panel del local en la impresión</label>
+  <button class="btn" id="print" type="button">Imprimir</button>
+</div>
+<div class="sheets">
+  <section class="sheet">
+    <img class="logo" src="/assets/logo.webp" alt="Ginotto Burger">
+    <h1>Escaneá y pedí</h1>
+    <p class="tag">Las mejores que vas a probar</p>
+    <div class="qr" id="q1" role="img" aria-label="QR a la carta"></div>
+    <p class="url" id="u1"></p>
+  </section>
+  <section class="sheet panel">
+    <img class="logo" src="/assets/logo.webp" alt="">
+    <h1>Panel del local</h1>
+    <p class="tag">Solo para el equipo</p>
+    <div class="qr" id="q2" role="img" aria-label="QR al panel"></div>
+    <p class="url" id="u2"></p>
+  </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// Cambiar por el dominio real al publicar (ej. 'https://ginotto.com.ar/'). Vacío = el origen desde donde se abre esta página.
+const CARTA_URL = '';
+const base = () => (($('#u').value || '').trim().replace(/\/+$/, ''));
+const $ = s => document.querySelector(s);
+$('#u').value = (CARTA_URL || location.origin).replace(/\/+$/, '') + '/';
+function draw() {
+  const b = base();
+  const u1 = b + '/', u2 = b + '/panel/';
+  $('#u1').textContent = u1; $('#u2').textContent = u2;
+  [['#q1', u1], ['#q2', u2]].forEach(([sel, t]) => { const el = $(sel); el.innerHTML = ''; new QRCode(el, { text: t, width: 640, height: 640, colorDark: '#1d1428', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); });
+}
+$('#u').addEventListener('input', draw);
+$('#cp').onchange = e => document.body.classList.toggle('con-panel', e.target.checked);
+$('#print').onclick = () => window.print();
+if (window.QRCode) draw(); else $('.bar').insertAdjacentHTML('beforeend', '<p>No se pudo cargar la librería de QR (necesita internet).</p>');
+</script>
+</body>
+</html>

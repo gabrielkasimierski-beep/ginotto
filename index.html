@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ginotto Burger — Las mejores que vas a probar</title>
+<meta name="description" content="Ginotto Burger, hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Cheeseburger, Gino, Otto, veggie y combos. Pedí online.">
+<link rel="icon" href="assets/logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Permanent+Marker&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
+<header class="hero" id="top">
+  <svg class="splat s1" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
+  <svg class="splat s2" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
+  <div class="hero-inner">
+    <img class="hero-logo" src="assets/logo.webp" alt="Ginotto Burger, jirafa con gorra violeta" width="450" height="450">
+    <p class="kicker">Hamburguesería · Villa Urquiza</p>
+    <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
+    <div class="hero-cta">
+      <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
+      <a class="btn btn-ghost" href="#carta">Ver la carta</a>
+    </div>
+    <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+  </div>
+  <div class="hero-burgers" aria-hidden="true">
+    <img src="assets/cheese-doble-cream.webp" alt="" class="hb hb1">
+    <img src="assets/gino-doble-cream.webp" alt="" class="hb hb2">
+    <img src="assets/otto-doble-cream.webp" alt="" class="hb hb3">
+  </div>
+  <div class="drip"></div>
+</header>
+
+<nav class="cats" aria-label="Categorías de la carta">
+  <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#acompanamiento">Acompañamiento</a><a href="#extra">Extra</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a>
+</nav>
+
+<main id="carta">
+  <section id="burgas" class="sec">
+    <h2 class="title"><span>Burgas</span></h2>
+    <p class="sub">Carne smash, cheddar y mucha actitud. Simple o doble.</p>
+    <div class="grid" id="grid-burgas"></div>
+    <!-- TODO 3D (Opus): visor 3D + AR de la Gino Doble. Proveer assets/gino-doble.glb y reemplazar este bloque
+         (sacar el atributo hidden) con:
+         <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
+         <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate shadow-intensity="1" poster="assets/gino-doble-cream.webp"></model-viewer> -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <div id="gino-3d" class="viewer3d">
+      <h3>Mirá la Gino Doble en 3D</h3>
+      <p class="sub">Girala con el dedo y tocá <strong>«Ver en tu mesa»</strong> para ponerla en AR.</p>
+      <div id="gino-3d-slot">
+        <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D"
+          ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+          camera-controls auto-rotate touch-action="pan-y"
+          shadow-intensity="1" exposure="1.1"
+          poster="assets/gino-doble-cream.webp"
+          style="width:100%;height:60vh;max-height:520px;--poster-color:transparent;background:transparent">
+          <button slot="ar-button" class="ar-btn">📱 Ver en tu mesa</button>
+        </model-viewer>
+      </div>
+    </div>
+  </section>
+
+  <section id="veggie" class="sec">
+    <h2 class="title purple"><span>Veggie</span></h2>
+    <p class="sub">Medallón NotBurger. Mismo sabor Ginotto.</p>
+    <div class="grid" id="grid-veggie"></div>
+  </section>
+
+  <section class="sec duo">
+    <div id="acompanamiento">
+      <h2 class="title purple"><span>Acompañamiento</span></h2>
+      <div class="pics pics3"><img class="pic" src="assets/papas-cream.webp" alt="Papas fritas" width="1024" height="1024" loading="lazy"><img class="pic" src="assets/aros-cream.webp" alt="Aros de cebolla" width="1024" height="1024" loading="lazy"><img class="pic" src="assets/nuggets-cream.webp" alt="Nuggets" width="1024" height="1024" loading="lazy"></div>
+      <ul class="list" id="list-acomp"></ul>
+    </div>
+    <div id="extra">
+      <h2 class="title"><span>Extra</span></h2>
+      <ul class="list" id="list-extra"></ul>
+    </div>
+  </section>
+
+  <section id="combos" class="sec combos">
+    <h2 class="title purple"><span>Combos</span></h2>
+    <p class="sub">Todos incluyen papas + bebida.</p>
+    <div class="car-wrap">
+      <button class="car-btn prev" type="button" aria-label="Combos anteriores">&#8249;</button>
+      <div class="carousel" id="carousel" tabindex="0" aria-label="Combos, deslizá para ver más"></div>
+      <button class="car-btn next" type="button" aria-label="Más combos">&#8250;</button>
+    </div>
+    <p class="swipe-hint">Deslizá para ver más &rarr;</p>
+  </section>
+
+  <section id="bebidas" class="sec">
+    <h2 class="title"><span>Bebidas</span></h2>
+    <div class="grid grid-bebidas" id="grid-bebidas"></div>
+  </section>
+
+  <div class="cta-band">
+    <h2>¿Hambre?</h2>
+    <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
+    <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+  </div>
+
+  <section id="local" class="sec local">
+    <h2 class="title purple"><span>El local</span></h2>
+    <div class="local-grid">
+      <div class="info">
+        <h3>Dónde estamos</h3>
+        <p class="big">Av. Monroe 3582<br><small>Villa Urquiza, CABA</small></p>
+        <h3>Horarios</h3>
+        <table class="hours">
+          <tr><th>Lun – Mar</th><td>Mediodía 11:30 – 14:30</td></tr>
+          <tr><th>Mié – Sáb</th><td>Mediodía 11:30 – 14:30<br>Noche 19:30 – 23:00</td></tr>
+          <tr><th>Domingo</th><td>Noche 19:30 – 23:00</td></tr>
+        </table>
+        <div class="contact">
+          <a class="btn btn-wa" href="https://wa.me/541178872874" target="_blank" rel="noopener">WhatsApp 11 7887 2874</a>
+          <a class="btn btn-ig" href="https://www.instagram.com/ginotto.ar/" target="_blank" rel="noopener">@ginotto.ar</a>
+        </div>
+        <p class="mail"><a href="mailto:ginottoburger@gmail.com">ginottoburger@gmail.com</a></p>
+      </div>
+      <div class="map">
+        <iframe title="Mapa de Ginotto Burger, Av. Monroe 3582" src="https://maps.google.com/maps?q=Av.+Monroe+3582,+Buenos+Aires,+Argentina&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <img src="assets/logo.webp" alt="Ginotto Burger" width="110" height="110">
+  <p class="foot-tag">Las mejores que vas a probar</p>
+  <p>Av. Monroe 3582 · Villa Urquiza · CABA</p>
+  <p><a href="https://www.instagram.com/ginotto.ar/" target="_blank" rel="noopener">Instagram</a> · <a href="https://wa.me/541178872874" target="_blank" rel="noopener">WhatsApp</a></p>
+  <p class="copy">© Ginotto Burger</p>
+</footer>
+
+<button type="button" class="fab cart-fab" id="cart-fab" hidden aria-label="Ver mi pedido"><span class="n">0</span> Ver pedido &middot; <span class="t"></span></button>
+
+<div id="drawer" class="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <div class="drawer-bg" id="drawer-bg"></div>
+  <div class="drawer-panel">
+    <div class="drawer-head"><h2 id="drawer-title">Tu pedido</h2><button type="button" id="drawer-close" aria-label="Cerrar">&times;</button></div>
+    <div id="drawer-body"></div>
+  </div>
+</div>
+
+<script src="menu-data.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+<script src="cart.js"></script>
+</body>
+</html>

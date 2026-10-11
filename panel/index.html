@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Panel Ginotto</title>
+<link rel="icon" href="/assets/logo.webp" type="image/webp">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--vio:#4B2E83;--ora:#F2791E;--bg:#F7F3EA;--ink:#1d1428;--ok:#1f8a4c;--bad:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Barlow',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.35;overflow-x:hidden}
+h1,h2,.lg{font-family:'Luckiest Guy',cursive;font-weight:400;letter-spacing:.03em}
+button{font:inherit;cursor:pointer}
+.top{background:var(--vio);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:4px solid var(--ora);position:sticky;top:0;z-index:10}
+.top img{width:42px;height:42px}
+.top h1{margin:0;font-size:1.5rem;flex:1;min-width:120px}
+.store{display:flex;align-items:center;gap:10px;background:#fff;color:var(--ink);padding:6px 12px;border-radius:99px;font-weight:700}
+.sw{position:relative;width:62px;height:34px;border-radius:99px;border:0;background:#b3261e;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw[aria-checked=true]{background:var(--ok)}
+.sw[aria-checked=true]::after{transform:translateX(28px)}
+.tabs{display:flex;gap:8px;padding:12px 14px 0;max-width:1100px;margin:0 auto}
+.tabs button{flex:1;padding:12px;border:2px solid var(--ink);border-radius:12px 12px 0 0;background:#fff;font-weight:700;font-size:1.05rem}
+.tabs button[aria-selected=true]{background:var(--ora);color:#fff}
+main{max-width:1100px;margin:0 auto;padding:14px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{padding:9px 14px;border-radius:99px;border:2px solid var(--ink);background:#fff;font-weight:700;min-height:44px}
+.filters button[aria-pressed=true]{background:var(--vio);color:#fff}
+.orders{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
+.o{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:12px;border-left-width:10px}
+.o.nuevo{border-left-color:var(--ora)}.o.preparando{border-left-color:#e0b100}.o.listo{border-left-color:var(--ok)}.o.entregado{border-left-color:#999;opacity:.7}
+.o.fresh{animation:fresh 2s ease-out 3}
+@keyframes fresh{50%{background:#ffe3c9}}
+.o-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.o-h .lg{font-size:1.7rem;color:var(--vio)}
+.o small{color:#665a73}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-weight:700;font-size:.85rem;background:var(--vio);color:#fff}
+.tag.delivery{background:var(--ora)}
+.o ul{margin:8px 0;padding-left:0;list-style:none}
+.o li{display:flex;gap:8px;padding:3px 0;border-bottom:1px dotted #ccc}
+.o li b{min-width:2em;color:var(--vio)}
+.nota{background:#fff6d6;border-radius:8px;padding:6px 8px;margin:6px 0}
+.tot{font-weight:800;font-size:1.2rem}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.steps button{padding:10px 2px;min-height:48px;border-radius:10px;border:2px solid var(--ink);background:#fff;font-weight:700;font-size:.82rem}
+.steps button.cur{background:var(--ink);color:#fff}
+.steps button.next{background:var(--ora);color:#fff}
+.empty{text-align:center;color:#665a73;padding:40px 10px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr))}
+.cat{grid-column:1/-1;margin:14px 0 0;font-size:1.4rem;color:var(--vio)}
+.it{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:10px 12px;min-height:64px}
+.it .nm{flex:1}.it .nm small{display:block}
+.it.off{background:#f1d6d3;border-color:var(--bad)}
+.it.off .nm b{text-decoration:line-through}
+.login{max-width:340px;margin:12vh auto;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:24px;text-align:center;box-shadow:6px 6px 0 var(--ora)}
+.login img{width:90px}
+.login input{width:100%;font-size:2rem;text-align:center;letter-spacing:.4em;padding:10px;border:3px solid var(--ink);border-radius:12px;margin:12px 0}
+.login button{width:100%;padding:14px;font-size:1.2rem;border:3px solid var(--ink);border-radius:12px;background:var(--ora);color:#fff;font-family:'Luckiest Guy',cursive;letter-spacing:.05em}
+.login p{color:var(--bad);min-height:1.4em;margin:6px 0}
+[hidden]{display:none!important}
+.demo-ribbon{background:var(--ora);color:#fff;text-align:center;font-weight:700;font-size:.8rem;letter-spacing:.08em;padding:3px 8px;text-transform:uppercase}
+.sound{margin-left:auto;padding:9px 14px;border-radius:99px;border:2px solid var(--ink);background:#fff;font-weight:700;min-height:44px}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <img src="/assets/logo.webp" alt="Ginotto">
+  <h2>Panel del local</h2>
+  <form id="lf"><input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN" autofocus>
+  <p id="lerr" role="alert"></p><button>Entrar</button></form>
+</div>
+
+<div id="app" hidden>
+  <div class="demo-ribbon" id="demo-ribbon" hidden>DEMO · los datos viven solo en este navegador</div>
+  <div class="top">
+    <img src="/assets/logo.webp" alt="">
+    <h1>Panel Ginotto</h1>
+    <div class="store"><span id="store-lbl">Abierto</span><button class="sw" id="sw" role="switch" aria-checked="true" aria-label="Local abierto"></button></div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="t-ped" aria-selected="true">Pedidos <span id="cnt"></span></button>
+    <button role="tab" id="t-disp" aria-selected="false">Disponibilidad</button>
+  </div>
+  <main>
+    <section id="v-ped">
+      <div class="filters" id="filters"></div>
+      <div class="orders" id="orders"></div>
+    </section>
+    <section id="v-disp" hidden><div class="grid" id="grid"></div></section>
+  </main>
+</div>
+
+<script src="/menu-data.js"></script>
+<script src="/store.js"></script>
+<script>
+const PIN = '1234'; // demo, no es autenticación real
+const $ = s => document.querySelector(s), fmt = n => '$' + n.toLocaleString('es-AR');
+const ESTADOS = ['nuevo', 'preparando', 'listo', 'entregado'];
+const LBL = { nuevo: 'Nuevo', preparando: 'Preparando', listo: 'Listo', entregado: 'Entregado' };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let pedidos = [], estado = { store: { abierto: true }, disponibilidad: {} }, filtro = 'activos', seen = null, fresh = new Set();
+
+
+function login() { $('#login').hidden = true; $('#app').hidden = false; start(); }
+try { if (sessionStorage.getItem('gino-pin') === '1') login(); } catch (e) {}
+$('#lf').onsubmit = e => {
+  e.preventDefault();
+  if ($('#pin').value === PIN) { try { sessionStorage.setItem('gino-pin', '1'); } catch (x) {} login(); }
+  else { $('#lerr').textContent = 'PIN incorrecto'; $('#pin').value = ''; }
+};
+
+function beep() {
+  try { const c = new (window.AudioContext || window.webkitAudioContext)(), o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination); o.frequency.value = 880; g.gain.setValueAtTime(.2, c.currentTime); g.gain.exponentialRampToValueAtTime(.001, c.currentTime + .5);
+    o.start(); o.stop(c.currentTime + .5); } catch (e) {}
+}
+function tab(which) {
+  const p = which === 'ped';
+  $('#v-ped').hidden = !p; $('#v-disp').hidden = p;
+  $('#t-ped').setAttribute('aria-selected', p); $('#t-disp').setAttribute('aria-selected', !p);
+}
+$('#t-ped').onclick = () => tab('ped'); $('#t-disp').onclick = () => tab('disp');
+
+function renderStore() {
+  const a = estado.store.abierto !== false;
+  $('#sw').setAttribute('aria-checked', a); $('#store-lbl').textContent = a ? 'Abierto' : 'Cerrado ahora';
+}
+$('#sw').onclick = async () => {
+  const a = !(estado.store.abierto !== false);
+  estado.store.abierto = a; renderStore(); await Store.setAbierto(a);
+};
+
+function renderFilters() {
+  const n = e => pedidos.filter(p => p.estado === e).length;
+  const opts = [['activos', 'Activos (' + pedidos.filter(p => p.estado !== 'entregado').length + ')'], ...ESTADOS.map(e => [e, LBL[e] + ' (' + n(e) + ')']), ['todos', 'Todos']];
+  $('#filters').innerHTML = opts.map(([k, t]) => `<button data-f="${k}" aria-pressed="${filtro === k}">${t}</button>`).join('') +
+    `<button class="sound" id="snd" aria-pressed="false" title="Probar sonido de aviso">Probar aviso</button>`;
+  $('#snd').onclick = beep;
+  $('#cnt').textContent = n('nuevo') ? '(' + n('nuevo') + ' nuevos)' : '';
+}
+$('#filters').onclick = e => { const b = e.target.closest('[data-f]'); if (b) { filtro = b.dataset.f; renderOrders(); renderFilters(); } };
+
+function renderOrders() {
+  const list = pedidos.filter(p => filtro === 'todos' ? true : filtro === 'activos' ? p.estado !== 'entregado' : p.estado === filtro);
+  $('#orders').innerHTML = list.length ? list.map(p => {
+    const idx = ESTADOS.indexOf(p.estado), hora = new Date(p.ts).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    return `<article class="o ${p.estado} ${fresh.has(p.id) ? 'fresh' : ''}">
+      <div class="o-h"><span class="lg">#${p.nro}</span><span><span class="tag ${p.tipo}">${p.tipo === 'delivery' ? 'Delivery' : 'Retiro'}</span> <small>${hora}</small></span></div>
+      <div><b>${esc(p.cliente)}</b> · <a href="https://wa.me/${esc(p.telefono.replace(/\D/g, ''))}" target="_blank" rel="noopener">${esc(p.telefono)}</a></div>
+      <ul>${p.items.map(i => `<li><b>${i.qty}×</b><span>${esc(i.nombre)}</span></li>`).join('')}</ul>
+      ${p.nota ? `<div class="nota">Nota: ${esc(p.nota)}</div>` : ''}
+      <div class="tot">${fmt(p.total)}</div>
+      <div class="steps">${ESTADOS.map((e, i) => `<button data-id="${p.id}" data-e="${e}" class="${i === idx ? 'cur' : i === idx + 1 ? 'next' : ''}">${LBL[e]}</button>`).join('')}</div>
+    </article>`;
+  }).join('') : '<p class="empty" style="grid-column:1/-1">No hay pedidos en esta vista.</p>';
+}
+$('#orders').onclick = async e => {
+  const b = e.target.closest('[data-e]'); if (!b) return;
+  const p = pedidos.find(x => x.id === b.dataset.id); p.estado = b.dataset.e; renderOrders(); renderFilters();
+  await Store.setEstado(b.dataset.id, b.dataset.e);
+};
+
+function renderGrid() {
+  let cat = '', h = '';
+  for (const i of MENU) {
+    if (i.cat !== cat) { cat = i.cat; h += `<h2 class="cat">${cat}</h2>`; }
+    const on = estado.disponibilidad[i.id] !== false;
+    h += `<div class="it ${on ? '' : 'off'}"><div class="nm"><b>${esc(i.nombre)}</b><small>${on ? fmt(i.precio) : 'Agotado'}</small></div>
+      <button class="sw" data-id="${i.id}" role="switch" aria-checked="${on}" aria-label="${esc(i.nombre)} disponible"></button></div>`;
+  }
+  $('#grid').innerHTML = h;
+}
+$('#grid').onclick = async e => {
+  const b = e.target.closest('[data-id]'); if (!b) return;
+  const on = !(estado.disponibilidad[b.dataset.id] !== false);
+  estado.disponibilidad[b.dataset.id] = on; renderGrid();
+  await Store.setDisponible(b.dataset.id, on);
+};
+
+async function poll() {
+  try {
+    const [ps, st] = await Promise.all([Store.getPedidos(), Store.getState()]);
+    pedidos = ps; estado = st;
+    if (seen === null) seen = new Set(ps.map(p => p.id));
+    else { const nuevos = ps.filter(p => !seen.has(p.id)); if (nuevos.length) { nuevos.forEach(p => { seen.add(p.id); fresh.add(p.id); }); beep(); } }
+    renderStore(); renderFilters(); renderOrders();
+    if (!document.activeElement || !document.activeElement.closest('#grid')) renderGrid();
+  } catch (e) {}
+}
+async function start() {
+  await Store.ready;
+  if (Store.demo) { $('#demo-ribbon').hidden = false; Store.onChange(poll); }
+  poll(); setInterval(poll, Store.demo ? 30000 : 5000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Vercel
+.vercel/
+
+# Estado runtime del backend local (se crea solo al correr serve.js)
+data/
+
+# Masters pesados de las imágenes/3D (no hacen falta en el repo)
+assets/_src/
+
+# Dependencias / sistema
+node_modules/
+*.log
+.DS_Store
+Thumbs.db

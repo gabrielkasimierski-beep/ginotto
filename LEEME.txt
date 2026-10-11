@@ -1,0 +1,7 @@
+Ginotto Burger - landing v1 (localhost)
+
+Levantar:  cd C:\Claude\Webs\ginotto  &&  node serve.js   ->  http://localhost:8080
+(tambien anda con cualquier server estatico, p.ej. npx serve, o abriendo index.html; las fuentes y el mapa necesitan internet)
+
+Archivos: index.html, style.css, app.js (carta y precios), assets/ (fotos), serve.js (server minimo)
+Para cambiar precios/platos: editar app.js.

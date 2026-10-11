@@ -3,190 +3,206 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ginotto Burger — Las mejores que vas a probar</title>
-<meta name="description" content="Ginotto Burger, hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Cheeseburger, Gino, Otto, veggie y combos. Pedí online.">
-<meta name="theme-color" content="#4B2E83">
+<title>Ginotto Burger — Hamburguesas como deben ser</title>
+<meta name="description" content="Ginotto Burger, hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Plancha y oficio: cheeseburger, Gino, Otto, veggie y combos. Pedí online.">
+<meta name="theme-color" content="#0b0a09">
 <link rel="icon" href="assets/logo.webp" type="image/webp">
+<script>(function(){try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('anim','reveal');}catch(e){}})();</script>
+<style>html,body{margin:0;padding:0;background:#0b0a09;color:#fff;overflow-x:hidden}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Permanent+Marker&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<script>document.documentElement.classList.add('js')</script>
 </head>
-<body>
+<body style="background:#0b0a09">
 
 <div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
 
-<!-- ============ HERO: la entrada, en capas ============ -->
-<header class="hero" id="top" data-escena>
-  <div class="hero__papel" aria-hidden="true"></div>
-  <svg class="spl spl--vio" data-z="0.25" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <svg class="spl spl--ora" data-z="0.4" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <svg class="spl spl--ink" data-z="0.15" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-
-  <p class="hero__kicker"><span>Hamburguesería</span> · Villa Urquiza</p>
-  <h1 class="hero__titulo" data-z="0.5">
-    <span class="t1">Las mejores</span>
-    <span class="t2">que vas a probar</span>
-  </h1>
-
-  <div class="hero__escena">
-    <!-- detrás de la burga -->
-    <img class="prop" data-z="0.7" style="--x:4%;--y:26%;--w:30%;--r:-24deg;--d:.35s" src="assets/props/bacon.webp" alt="" aria-hidden="true">
-    <img class="prop" data-z="0.8" style="--x:72%;--y:18%;--w:28%;--r:18deg;--d:.5s" src="assets/props/cheddar.webp" alt="" aria-hidden="true">
-    <img class="hero__burga" data-z="1" src="assets/gino-doble-cut.webp" alt="Gino Doble: doble carne, cheddar, bacon y aderezo Gino" width="1024" height="1024" fetchpriority="high">
-    <div class="hero__sombra" aria-hidden="true"></div>
-    <!-- delante de la burga -->
-    <img class="prop prop--f" data-z="1.7" style="--x:-6%;--y:60%;--w:34%;--r:-18deg;--d:.6s" src="assets/props/medallon.webp" alt="" aria-hidden="true">
-    <img class="prop prop--f" data-z="1.45" style="--x:76%;--y:64%;--w:34%;--r:16deg;--d:.75s" src="assets/props/cheddar-pila.webp" alt="" aria-hidden="true">
-    <img class="prop prop--f" data-z="2" style="--x:70%;--y:-6%;--w:34%;--r:30deg;--d:.9s" src="assets/props/bacon.webp" alt="" aria-hidden="true">
-    <img class="prop prop--f" data-z="1.5" style="--x:4%;--y:86%;--w:26%;--r:-12deg;--d:1s" src="assets/props/pan.webp" alt="" aria-hidden="true">
+<!-- ============ NAV: fijo, sin fondo, pegado a los costados ============ -->
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="#top" aria-label="Ginotto Burger, inicio"><img src="assets/logo.webp" alt="" width="44" height="44">Ginotto<span class="dot"></span></a>
+    <div class="nav-links">
+      <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a><a href="#local">El local</a>
+    </div>
+    <a class="btn-nav" href="#carta" data-open-checkout>Pedir</a>
+    <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+      <svg class="i-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="i-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
   </div>
-
-  <img class="hero__jirafa" data-z="1.2" src="assets/logo.webp" alt="Ginotto Burger, jirafa con gorra violeta" width="450" height="450">
-
-  <div class="hero__cta">
-    <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
-    <a class="btn btn-ghost" href="#burgas">Ver la carta</a>
+  <div class="menu" id="mobile-menu" hidden>
+    <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a><a href="#local">El local</a>
+    <a class="btn-nav" href="#carta" data-open-checkout>Pedir ahora</a>
   </div>
-  <p class="fudo-link hero__fudo">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
-</header>
-
-<div class="cinta" aria-hidden="true">
-  <div class="cinta__pista">
-    <span>Smash</span><i>✦</i><span>Cheddar</span><i>✦</i><span>Bacon</span><i>✦</i><span>Gino</span><i>✦</i><span>Otto</span><i>✦</i><span>Veggie</span><i>✦</i>
-    <span>Smash</span><i>✦</i><span>Cheddar</span><i>✦</i><span>Bacon</span><i>✦</i><span>Gino</span><i>✦</i><span>Otto</span><i>✦</i><span>Veggie</span><i>✦</i>
-  </div>
-</div>
-
-<nav class="cats" aria-label="Categorías de la carta">
-  <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#por-dentro">Por dentro</a><a href="#acompanamiento">Acompañamiento</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a>
 </nav>
+
+<!-- ============ HERO: dos clips encadenados, el scroll es el único transporte ============ -->
+<div class="track" id="top">
+  <section class="stage" aria-label="Gino Doble">
+    <video class="bg" id="v1" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="bg" id="v2" muted playsinline preload="auto" aria-hidden="true"></video>
+
+    <div class="hero-copy">
+      <p class="kicker">Plancha y oficio &middot; Villa Urquiza</p>
+      <h1>Hamburguesas<br>como deben ser</h1>
+      <p class="lead">Smash, cheddar y mucha actitud.</p>
+    </div>
+
+    <ol class="capas" id="capas" aria-hidden="true">
+      <li>Pan brioche</li>
+      <li>Aderezo Gino</li>
+      <li>Bacon crocante</li>
+      <li>Cheddar derretido</li>
+      <li>Doble carne smash</li>
+    </ol>
+
+    <div class="cierre" id="cierre">
+      <p class="cierre__n">Gino Doble</p>
+      <p class="cierre__p">$18.000</p>
+      <div class="add" data-add="gino-doble"></div>
+    </div>
+
+    <div class="hero-cta">
+      <div class="cta-row">
+        <a class="btn-primary" href="#carta" data-open-checkout>Pedir ahora<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+        <a class="btn-ghost" href="#burgas">Ver la carta</a>
+      </div>
+      <div class="trust"><span>Retiro o delivery</span><span>Av. Monroe 3582</span><span>Hecho en plancha</span></div>
+    </div>
+  </section>
+</div>
 
 <main id="carta">
 
-  <!-- ============ LA CARTA: un mundo de color por burga ============ -->
-  <section id="burgas" class="grupo">
-    <header class="grupo__cabeza">
-      <h2 class="title"><span>Burgas</span></h2>
-      <p class="sub">Carne smash, cheddar y mucha actitud. Simple o doble.</p>
-    </header>
-    <div class="mundos" id="grid-burgas"></div>
-  </section>
-
-  <section id="veggie" class="grupo">
-    <header class="grupo__cabeza">
-      <h2 class="title purple"><span>Veggie</span></h2>
-      <p class="sub">Medallón NotBurger. Mismo sabor Ginotto.</p>
-    </header>
-    <div class="mundos" id="grid-veggie"></div>
-  </section>
-
-  <!-- ============ POR DENTRO: la Gino Doble se arma con el scroll ============ -->
-  <section id="por-dentro" class="dentro" aria-label="La Gino Doble por dentro">
-    <div class="dentro__pista">
-      <div class="dentro__fondo" aria-hidden="true"></div>
-      <h2 class="dentro__titulo" aria-hidden="true">Por dentro</h2>
-      <div class="dentro__escena">
-        <canvas class="dentro__lienzo" id="dentro-lienzo" aria-hidden="true"></canvas>
-        <img class="dentro__estatica" id="dentro-estatica" src="assets/gino-doble-cut.webp" alt="Gino Doble" width="1024" height="1024" loading="lazy">
+  <!-- ============ LA CARTA ============ -->
+  <section id="burgas" class="products">
+    <div class="wrap">
+      <div class="prod-head">
+        <h2>Las burgas</h2>
+        <p>Carne smash, cheddar y plancha bien caliente. Simples o dobles.</p>
       </div>
-      <ol class="dentro__capas" id="dentro-capas" aria-hidden="true">
-        <li style="--i:0">Pan brioche</li>
-        <li style="--i:1">Aderezo Gino</li>
-        <li style="--i:2">Bacon crocante</li>
-        <li style="--i:3">Cheddar derretido</li>
-        <li style="--i:4">Doble carne smash</li>
-      </ol>
-      <p class="dentro__nota">Gino Doble · $18.000</p>
-      <div class="add dentro__add" data-add="gino-doble"></div>
+      <div class="grid" id="grid-burgas"></div>
+    </div>
+  </section>
+
+  <section id="veggie" class="products products--sig">
+    <div class="wrap">
+      <div class="prod-head">
+        <h2>Veggie</h2>
+        <p>Medallón NotBurger. El mismo sabor Ginotto.</p>
+      </div>
+      <div class="grid" id="grid-veggie"></div>
+    </div>
+  </section>
+
+  <section id="acompanamiento" class="products products--sig">
+    <div class="wrap duo">
+      <div>
+        <div class="prod-head"><h2>Acompañamiento</h2></div>
+        <div class="pics pics3">
+          <img class="pic" src="assets/foto/papas.webp" alt="Papas fritas" width="768" height="1024" loading="lazy">
+          <img class="pic" src="assets/foto/aros.webp" alt="Aros de cebolla" width="768" height="1024" loading="lazy">
+          <img class="pic" src="assets/foto/nuggets.webp" alt="Nuggets" width="768" height="1024" loading="lazy">
+        </div>
+        <ul class="list" id="list-acomp"></ul>
+      </div>
+      <div id="extra">
+        <div class="prod-head"><h2>Extra</h2></div>
+        <ul class="list" id="list-extra"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="combos" class="products products--sig">
+    <div class="wrap">
+      <div class="prod-head">
+        <h2>Combos</h2>
+        <p>Todos incluyen papas + bebida.</p>
+      </div>
+      <div class="car-wrap">
+        <button class="car-btn prev" type="button" aria-label="Combos anteriores">&#8249;</button>
+        <div class="carousel" id="carousel" tabindex="0" aria-label="Combos, deslizá para ver más"></div>
+        <button class="car-btn next" type="button" aria-label="Más combos">&#8250;</button>
+      </div>
+      <p class="swipe-hint">Deslizá para ver más &rarr;</p>
+    </div>
+  </section>
+
+  <section id="bebidas" class="products products--sig">
+    <div class="wrap">
+      <div class="prod-head"><h2>Bebidas</h2></div>
+      <div class="grid grid-bebidas" id="grid-bebidas"></div>
     </div>
   </section>
 
   <!-- ============ Para ver la Gino en tu mesa ============ -->
-  <section class="sec viewer3d-sec">
+  <section class="products products--sig viewer3d-sec">
     <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <div id="gino-3d" class="viewer3d">
-      <h3>Mirá la Gino Doble en 3D</h3>
-      <p class="sub">Girala con el dedo y tocá <strong>«Ver en tu mesa»</strong> para ponerla en AR.</p>
-      <div id="gino-3d-slot">
-        <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D"
-          ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
-          camera-controls auto-rotate touch-action="pan-y"
-          shadow-intensity="1" exposure="1.1"
-          poster="assets/gino-doble-cream.webp"
-          style="width:100%;height:60vh;max-height:520px;--poster-color:transparent;background:transparent">
-          <button slot="ar-button" class="ar-btn">📱 Ver en tu mesa</button>
-        </model-viewer>
+    <div class="wrap">
+      <div id="gino-3d" class="viewer3d">
+        <h3>Mirá la Gino Doble en 3D</h3>
+        <p class="sub">Girala con el dedo y tocá <strong>«Ver en tu mesa»</strong> para ponerla en AR.</p>
+        <div id="gino-3d-slot">
+          <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D"
+            ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+            camera-controls auto-rotate touch-action="pan-y"
+            shadow-intensity="1" exposure="1.1"
+            poster="assets/gino-doble-cut.webp"
+            style="width:100%;height:60vh;max-height:520px;--poster-color:transparent;background:transparent">
+            <button slot="ar-button" class="ar-btn">Ver en tu mesa</button>
+          </model-viewer>
+        </div>
       </div>
     </div>
-  </section>
-
-  <section class="sec duo">
-    <div id="acompanamiento">
-      <h2 class="title purple"><span>Acompañamiento</span></h2>
-      <div class="pics pics3"><img class="pic" src="assets/papas-cream.webp" alt="Papas fritas" width="1024" height="1024" loading="lazy"><img class="pic" src="assets/aros-cream.webp" alt="Aros de cebolla" width="1024" height="1024" loading="lazy"><img class="pic" src="assets/nuggets-cream.webp" alt="Nuggets" width="1024" height="1024" loading="lazy"></div>
-      <ul class="list" id="list-acomp"></ul>
-    </div>
-    <div id="extra">
-      <h2 class="title"><span>Extra</span></h2>
-      <ul class="list" id="list-extra"></ul>
-    </div>
-  </section>
-
-  <section id="combos" class="sec combos">
-    <h2 class="title purple"><span>Combos</span></h2>
-    <p class="sub">Todos incluyen papas + bebida.</p>
-    <div class="car-wrap">
-      <button class="car-btn prev" type="button" aria-label="Combos anteriores">&#8249;</button>
-      <div class="carousel" id="carousel" tabindex="0" aria-label="Combos, deslizá para ver más"></div>
-      <button class="car-btn next" type="button" aria-label="Más combos">&#8250;</button>
-    </div>
-    <p class="swipe-hint">Deslizá para ver más &rarr;</p>
-  </section>
-
-  <section id="bebidas" class="sec">
-    <h2 class="title"><span>Bebidas</span></h2>
-    <div class="grid grid-bebidas" id="grid-bebidas"></div>
   </section>
 
   <div class="cta-band">
     <h2>¿Hambre?</h2>
-    <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
+    <a class="btn-primary" href="#carta" data-open-checkout>Pedir ahora<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
     <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
   </div>
 
-  <section id="local" class="sec local">
-    <h2 class="title purple"><span>El local</span></h2>
-    <div class="local-grid">
-      <div class="info">
-        <h3>Dónde estamos</h3>
-        <p class="big">Av. Monroe 3582<br><small>Villa Urquiza, CABA</small></p>
-        <h3>Horarios</h3>
-        <table class="hours">
-          <tr><th>Lun – Mar</th><td>Mediodía 11:30 – 14:30</td></tr>
-          <tr><th>Mié – Sáb</th><td>Mediodía 11:30 – 14:30<br>Noche 19:30 – 23:00</td></tr>
-          <tr><th>Domingo</th><td>Noche 19:30 – 23:00</td></tr>
-        </table>
-        <div class="contact">
-          <a class="btn btn-wa" href="https://wa.me/541178872874" target="_blank" rel="noopener">WhatsApp 11 7887 2874</a>
-          <a class="btn btn-ig" href="https://www.instagram.com/ginotto.ar/" target="_blank" rel="noopener">@ginotto.ar</a>
+  <section id="local" class="products products--sig local">
+    <div class="wrap">
+      <div class="prod-head"><h2>El local</h2></div>
+      <div class="local-grid">
+        <div class="info">
+          <h3>Dónde estamos</h3>
+          <p class="big">Av. Monroe 3582<br><small>Villa Urquiza, CABA</small></p>
+          <h3>Horarios</h3>
+          <table class="hours">
+            <tr><th>Lun – Mar</th><td>Mediodía 11:30 – 14:30</td></tr>
+            <tr><th>Mié – Sáb</th><td>Mediodía 11:30 – 14:30<br>Noche 19:30 – 23:00</td></tr>
+            <tr><th>Domingo</th><td>Noche 19:30 – 23:00</td></tr>
+          </table>
+          <div class="contact">
+            <a class="btn-primary" href="https://wa.me/541178872874" target="_blank" rel="noopener">WhatsApp 11 7887 2874</a>
+            <a class="btn-ghost" href="https://www.instagram.com/ginotto.ar/" target="_blank" rel="noopener">@ginotto.ar</a>
+          </div>
+          <p class="mail"><a href="mailto:ginottoburger@gmail.com">ginottoburger@gmail.com</a></p>
         </div>
-        <p class="mail"><a href="mailto:ginottoburger@gmail.com">ginottoburger@gmail.com</a></p>
-      </div>
-      <div class="map">
-        <iframe title="Mapa de Ginotto Burger, Av. Monroe 3582" src="https://maps.google.com/maps?q=Av.+Monroe+3582,+Buenos+Aires,+Argentina&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <div class="map">
+          <iframe title="Mapa de Ginotto Burger, Av. Monroe 3582" src="https://maps.google.com/maps?q=Av.+Monroe+3582,+Buenos+Aires,+Argentina&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  <img src="assets/logo.webp" alt="Ginotto Burger" width="110" height="110">
-  <p class="foot-tag">Las mejores que vas a probar</p>
-  <p>Av. Monroe 3582 · Villa Urquiza · CABA</p>
-  <p><a href="https://www.instagram.com/ginotto.ar/" target="_blank" rel="noopener">Instagram</a> · <a href="https://wa.me/541178872874" target="_blank" rel="noopener">WhatsApp</a></p>
-  <p class="copy">© Ginotto Burger</p>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo logo--plain" href="#top"><img src="assets/logo.webp" alt="" width="44" height="44">Ginotto<span class="dot"></span></a>
+        <p class="foot-intro">Hamburguesas como deben ser. Plancha y oficio en Villa Urquiza.</p>
+      </div>
+      <div><h4>Carta</h4><a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a></div>
+      <div><h4>Local</h4><a href="#local">Horarios</a><a href="https://maps.google.com/?q=Av.+Monroe+3582,+Buenos+Aires" target="_blank" rel="noopener">Cómo llegar</a><a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">Pedir por fu.do</a></div>
+      <div><h4>Contacto</h4><a href="https://wa.me/541178872874" target="_blank" rel="noopener">WhatsApp 11 7887 2874</a><a href="https://www.instagram.com/ginotto.ar/" target="_blank" rel="noopener">@ginotto.ar</a><a href="mailto:ginottoburger@gmail.com">ginottoburger@gmail.com</a><span>Av. Monroe 3582<br>Villa Urquiza, CABA</span></div>
+    </div>
+    <div class="foot-bottom"><span>© Ginotto Burger</span><span>Hecho en plancha</span></div>
+  </div>
 </footer>
 
 <button type="button" class="fab cart-fab" id="cart-fab" hidden aria-label="Ver mi pedido"><span class="n">0</span> Ver pedido &middot; <span class="t"></span></button>

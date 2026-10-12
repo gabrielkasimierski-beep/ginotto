@@ -192,10 +192,11 @@
     // "Reducir movimiento": un solo cuadro quieto, título y cierre ya puestos, sin pista larga
     document.documentElement.classList.add("peli-quieta");
   } else {
-    // Cuadros verticales: en celular ocupan todo ("cubrir"); en escritorio van enteros en su columna ("contener")
-    const apaisado = matchMedia("(min-aspect-ratio: 1/1)").matches;
+    // Cuadros verticales: en celular ocupan todo ("cubrir"); en pantallas más anchas van enteros en su columna
+    // ("contener"). El corte es el mismo de style.css (min-aspect-ratio 13/20).
+    const columna = matchMedia("(min-aspect-ratio: 13/20)").matches;
     const pelicula = crearCuadros(canvas, {
-      fuente: "assets/pelicula/toma-####.webp", total: 90, encaje: apaisado ? "contener" : "cubrir", foco: [0.5, 0.52],
+      fuente: "assets/pelicula/toma-####.webp", total: 90, encaje: columna ? "contener" : "cubrir", foco: [0.5, 0.52],
       alCargar: p => { carga.style.transform = `scaleX(${p})`; if (p >= 1) carga.style.opacity = 0; },
     });
     // En cuanto hay un cuadro el póster se va; si no carga nada queda el póster y la página funciona igual

@@ -45,14 +45,18 @@ h1 em{display:block;font-style:normal;color:var(--ora);text-shadow:4px 4px 0 var
 .peli-cierre .fudo-link{margin:0;background:rgba(251,243,225,.85);padding:.1em .6em;border-radius:8px}
 .peli-carga{position:absolute;z-index:9;left:0;right:0;top:0;height:4px}
 .peli-carga i{display:block;height:100%;background:var(--ora);transform-origin:0 50%;transform:scaleX(0);transition:opacity .4s}
-/* Cuadros verticales: en escritorio la película va en una columna a la derecha (borde difuminado contra el papel)
-   y el texto queda a la izquierda sobre crema limpia */
-@media (min-aspect-ratio:1/1){
- .peli-poster,.peli-canvas{left:auto;right:clamp(1rem,7vw,8rem);width:min(calc(100vh * .565),46vw);object-fit:contain;
+/* Cuadros verticales (9:16). En celular ocupan toda la pantalla. Con una pantalla más ancha que un celular
+   (tablet, ventana angosta) van enteros en una columna centrada, con el borde difuminado contra el papel. */
+@media (min-aspect-ratio:13/20){
+ .peli-poster,.peli-canvas{left:0;right:0;margin-inline:auto;width:min(100%,calc(100svh * .565));object-fit:contain;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%),linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);
   -webkit-mask-composite:source-in;
   mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%),linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);
   mask-composite:intersect}
+}
+/* Escritorio y apaisado: la columna pasa a la derecha y el texto queda a la izquierda sobre crema limpia */
+@media (min-aspect-ratio:1/1){
+ .peli-poster,.peli-canvas{left:auto;right:clamp(1rem,7vw,8rem);margin-inline:0;width:min(calc(100vh * .565),46vw)}
  .peli-barra{padding-inline:28px}
  .peli-titulo,.peli-caps,.peli-cierre{left:0;right:auto;top:0;bottom:0;width:min(44vw,34rem);margin-left:clamp(1.5rem,6vw,5rem);display:grid;align-content:center;justify-items:start;text-align:left;padding:0}
  .peli-titulo h1{font-size:clamp(3rem,6.2vw,6rem)}

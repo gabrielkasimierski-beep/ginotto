@@ -28,9 +28,13 @@
 - ✅ Ninguna imagen individual pesa más de 300 KB; todas con `width`/`height`; 22 de 27 con `loading="lazy"`.
 - ✅ El visor 3D (≈ 1,2 MB entre librería y modelo) ya no carga al abrir: se pide al acercarse a la sección.
   Antes bajaba siempre. Librería con versión fija (`model-viewer@4.4.0`), no `latest`.
-- ⚠️ Peso de la home: ≈ 6 MB de película (90 cuadros WebP, progresivos, después del botón Pedir) + ≈ 2,9 MB
-  del resto. El presupuesto del Motor es 2 MB: lo excede **la pieza firma**, no la página. Si Gaby quiere
-  acercarse: menos cuadros (60) o recompresión.
+- ✅ Película con dos versiones: la completa (90 cuadros, ≈ 6 MB, ≈ 230 MB decodificada) y una **liviana**
+  (45 cuadros de 432 px, ≈ 1,9 MB, ≈ 60 MB decodificada) que se elige sola con ahorro de datos, conexión
+  2G/3G o equipo de 2 GB de RAM o menos (`?liviana` la fuerza). Con la liviana la home queda en ≈ 4,8 MB, de los
+  cuales ≈ 2,9 MB son la carta y el resto de la página.
+- ⚠️ Presupuesto de 2 MB de la home: en la versión completa lo excede la pieza firma, no la página. Safari no
+  expone ahorro de datos ni RAM, así que los iPhone usan siempre la completa (se espera que aguanten; sin
+  probar en aparato real).
 - ✅ Tipografías con `display=swap`.
 
 ## 5. SEO

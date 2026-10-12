@@ -224,8 +224,14 @@
     // Cuadros verticales: en celular ocupan todo ("cubrir"); en pantallas más anchas van enteros en su columna
     // ("contener"). El corte es el mismo de style.css (min-aspect-ratio 13/20).
     const columna = matchMedia("(min-aspect-ratio: 13/20)").matches;
+    // Versión liviana (45 cuadros más chicos, ~1,9 MB y ~60 MB en memoria en vez de ~6 MB y ~230 MB):
+    // ahorro de datos, conexión 2G/3G o equipo con 2 GB de RAM o menos. "?liviana" la fuerza para probarla.
+    const red = navigator.connection || {};
+    const liviana = location.search.includes("liviana") || red.saveData === true ||
+      /^(slow-2g|2g|3g)$/.test(red.effectiveType || "") || (navigator.deviceMemory || 8) <= 2;
     const pelicula = crearCuadros(canvas, {
-      fuente: "assets/pelicula/toma-####.webp", total: 90, encaje: columna ? "contener" : "cubrir", foco: [0.5, 0.52],
+      fuente: liviana ? "assets/pelicula/liviana/toma-####.webp" : "assets/pelicula/toma-####.webp",
+      total: liviana ? 45 : 90, encaje: columna ? "contener" : "cubrir", foco: [0.5, 0.52],
       alCargar: p => { carga.style.transform = `scaleX(${p})`; if (p >= 1) carga.style.opacity = 0; },
     });
     // En cuanto hay un cuadro el póster se va; si no carga nada queda el póster y la página funciona igual

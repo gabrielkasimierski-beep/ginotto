@@ -64,9 +64,9 @@ const ld = {
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": LOCAL_DATA.name,
-  "image": "https://ginotto.ar/assets/foto/gino-doble.webp",
-  "@id": "https://ginotto.ar/",
-  "url": "https://ginotto.ar/",
+  "image": new URL("assets/foto/gino-doble.webp", location.href).href,
+  "@id": location.origin + "/",
+  "url": location.origin + "/",
   "telephone": LOCAL_DATA.telephone,
   "address": {
     "@type": "PostalAddress",
@@ -75,16 +75,11 @@ const ld = {
     "addressRegion": LOCAL_DATA.address.addressRegion,
     "addressCountry": "AR"
   },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": -34.5670868,
-    "longitude": -58.4842512
-  },
   "openingHoursSpecification": LOCAL_DATA.openingHoursSpecification.map(oh => ({
     "@type": "OpeningHoursSpecification",
     ...oh
   })),
-  "hasMenu": "https://ginotto.ar/",
+  "hasMenu": location.origin + "/#carta",
   "sameAs": [
     LOCAL_DATA.urls.instagram
   ]

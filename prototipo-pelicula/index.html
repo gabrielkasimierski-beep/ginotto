@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ginotto Burger — Las mejores que vas a probar</title>
+<meta name="description" content="Ginotto Burger, hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Las mejores que vas a probar.">
+<meta name="theme-color" content="#F6EBD3">
+<link rel="icon" href="../assets/logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Luckiest+Guy&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./kit/tokens.css">
+<style>
+  /* Portada con película — Ginotto. Todo el color y la tipografía salen de kit/tokens.css (bloque Marca). */
+  body { background: var(--tinta); }
+
+  /* Barra: la marca a la izquierda y el botón de pedir SIEMPRE visible (Norte 1: el botón responde antes que la escena) */
+  .barra { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; align-items: center; justify-content: space-between;
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) var(--margen) 10px; pointer-events: none; }
+  .barra > * { pointer-events: auto; }
+  .marca { display: flex; align-items: center; gap: .5rem; font-family: var(--f-titulo); font-size: 1.35rem; letter-spacing: .02em; color: var(--violeta); }
+  .marca img { width: 44px; height: 44px; border-radius: 50%; }
+  .pedir { font-family: var(--f-titulo); letter-spacing: .04em; font-size: 1.05rem; padding: .55em 1.2em; border-radius: 14px;
+    border: 3px solid var(--hueso); background: var(--acento); color: #fff; box-shadow: 3px 3px 0 var(--hueso); text-shadow: 1px 1px 0 var(--hueso); }
+  .pedir:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--hueso); }
+
+  /* La película: una pista alta con la escena pegada (kit: [data-escenario] / [data-escena]) */
+  .pelicula { --largo: 360vh; background: var(--tinta); }
+  .escena { background: var(--tinta); }
+  #pelicula { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .5s var(--curva-salida); }
+  .poster.fuera { opacity: 0; pointer-events: none; }
+
+  /* Título: el de la base, sobre el aire que deja el cuadro arriba de la burga */
+  .titulo { position: absolute; z-index: 5; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 74px); text-align: center;
+    padding-inline: var(--margen); font-family: var(--f-titulo); text-transform: uppercase; line-height: .92; pointer-events: none; }
+  .titulo .t1 { display: block; font-size: clamp(2.3rem, 11.5vw, 5.6rem); color: var(--violeta); text-shadow: 4px 4px 0 var(--acento); -webkit-text-stroke: 1.5px var(--hueso); paint-order: stroke fill; }
+  .titulo .t2 { display: block; font-size: clamp(1.5rem, 7.6vw, 3.6rem); color: var(--acento); text-shadow: 3px 3px 0 var(--hueso); margin-top: .1em; }
+  .rotulo { display: block; font-family: var(--f-mono); color: var(--violeta); font-size: 1.05rem; text-transform: none; letter-spacing: .02em; margin-bottom: .35rem; }
+
+  /* Capítulos: un renglón abajo, con fondo propio (no se apoya en un velo sobre la película) */
+  .capitulos { position: absolute; z-index: 6; left: var(--margen); right: var(--margen); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+    display: grid; justify-items: center; gap: .6rem; pointer-events: none; }
+  .capitulo { grid-area: 1 / 1; opacity: 0; transform: translateY(10px); text-align: center; padding: .55em 1.1em; border-radius: 14px;
+    background: color-mix(in srgb, var(--tinta-2) 92%, transparent); border: 3px solid var(--hueso); box-shadow: 4px 4px 0 var(--violeta);
+    font-family: var(--f-mono); color: var(--hueso); font-size: clamp(1rem, 4.2vw, 1.35rem); }
+  .capitulo b { color: var(--acento-hondo); font-weight: 400; }
+  .puntos { display: flex; gap: 7px; margin-top: .2rem; }
+  .puntos i { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--hueso); background: transparent; transition: background var(--d-media); }
+  .puntos i.on { background: var(--acento); }
+
+  /* Cierre: aparece al final y lleva a la carta */
+  .cierre { position: absolute; z-index: 7; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); display: grid; justify-items: center; gap: .6rem; opacity: 0; transform: translateY(14px); pointer-events: none; }
+  .cierre.on { pointer-events: auto; }
+  .cierre p { margin: 0; padding: .35em .9em; border-radius: 12px; font-family: var(--f-mono); color: var(--hueso); font-size: 1.15rem;
+    background: color-mix(in srgb, var(--tinta-2) 94%, transparent); border: 3px solid var(--hueso); box-shadow: 3px 3px 0 var(--violeta); }
+  .cierre p b { color: var(--acento-hondo); font-weight: 400; }
+
+  /* Cargador con progreso real */
+  .carga { position: absolute; z-index: 9; left: 0; right: 0; top: 0; height: 4px; background: transparent; }
+  .carga i { display: block; height: 100%; background: var(--acento); transform-origin: 0 50%; transform: scaleX(0); transition: opacity .4s; }
+
+  /* Escritorio y apaisado: los cuadros son verticales, así que la película va en una columna a la derecha
+     (borde difuminado contra el papel) y el texto queda a la izquierda, sobre crema limpia. */
+  @media (min-aspect-ratio: 1/1) {
+    #pelicula, .poster { left: auto; right: clamp(1rem, 7vw, 8rem); width: min(calc(100vh * 0.565), 46vw); object-fit: contain;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%), linear-gradient(180deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+      -webkit-mask-composite: source-in;
+              mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%), linear-gradient(180deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+              mask-composite: intersect; }
+    .titulo, .capitulos, .cierre { left: var(--margen); right: auto; width: min(44vw, 34rem); top: 0; bottom: 0; display: grid; align-content: center; }
+    .titulo { text-align: left; padding-inline: 0; margin-left: clamp(0rem, 3vw, 3rem); }
+    .titulo .t1 { font-size: clamp(3rem, 6.2vw, 6rem); }
+    .titulo .t2 { font-size: clamp(1.8rem, 3.6vw, 3.4rem); }
+    .rotulo { font-size: 1.25rem; }
+    .capitulos, .cierre { margin-left: clamp(0rem, 3vw, 3rem); justify-items: start; }
+    .capitulo { text-align: left; font-size: clamp(1.5rem, 2.6vw, 2.4rem); padding: .6em 1em; }
+    .puntos { margin-top: 1.4rem; }
+    .cierre p { font-size: 1.4rem; }
+  }
+
+  /* Banda siguiente: descanso quieto (no hay otra pieza firma) */
+  .descanso { text-align: center; }
+  .descanso .titulo-l { color: var(--violeta); text-shadow: 3px 3px 0 var(--acento); font-weight: 400; }
+  .descanso p { margin: 1rem auto 1.6rem; }
+  .btn-grande { font-family: var(--f-titulo); font-size: 1.5rem; letter-spacing: .04em; padding: .6em 1.5em; border-radius: 14px; background: var(--acento);
+    color: #fff; border: 3px solid var(--hueso); box-shadow: 4px 4px 0 var(--hueso); text-shadow: 2px 2px 0 var(--hueso); display: inline-block; }
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <a class="marca" href="#" aria-label="Ginotto Burger"><img src="../assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
+  <a class="pedir" href="../index.html#carta">Pedir</a>
+</header>
+
+<main>
+  <!-- PIEZA FIRMA: la burga se arma y se desarma con el scroll -->
+  <section class="pelicula" data-escenario aria-label="La Gino Doble por dentro">
+    <div class="escena" data-escena>
+      <img class="poster" id="poster" src="medios/poster.jpg" alt="Gino Doble: doble carne, cheddar y bacon" width="600" height="1062" fetchpriority="high">
+      <canvas id="pelicula" aria-hidden="true"></canvas>
+
+      <h1 class="titulo" id="titulo">
+        <span class="rotulo">Hamburguesería · Villa Urquiza</span>
+        <span class="t1">Las mejores</span>
+        <span class="t2">que vas a probar</span>
+      </h1>
+
+      <div class="capitulos" aria-hidden="true">
+        <p class="capitulo"><b>Doble</b> carne smash</p>
+        <p class="capitulo"><b>Cheddar</b> y bacon Sugardale</p>
+        <p class="capitulo"><b>Aderezo</b> Gino</p>
+        <div class="puntos"><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="cierre" id="cierre">
+        <p><b>Gino Doble</b> · $18.000</p>
+        <a class="btn-grande" href="../index.html#carta">Pedir ahora</a>
+      </div>
+
+      <div class="carga" aria-hidden="true"><i id="barra"></i></div>
+    </div>
+  </section>
+
+  <section class="banda descanso">
+    <div class="contenedor">
+      <h2 class="titulo-l" data-aparecer>La carta completa</h2>
+      <p class="bajada" data-aparecer style="margin-inline:auto">Cheeseburger, Gino, Otto y veggie. Simples o dobles. Pedí para retirar o con delivery.</p>
+      <a class="btn-grande" data-aparecer href="../index.html#burgas">Ver la carta</a>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { escenario, capitulos, aparecer, reducido } from "./kit/motor-scroll.js";
+  import { crearCuadros, conScroll } from "./kit/cuadros.js";
+
+  const pista = document.querySelector("[data-escenario]");
+  const canvas = document.getElementById("pelicula");
+  const poster = document.getElementById("poster");
+  const titulo = document.getElementById("titulo");
+  const caps = [...document.querySelectorAll(".capitulo")];
+  const puntos = [...document.querySelectorAll(".puntos i")];
+  const cierre = document.getElementById("cierre");
+  const barra = document.getElementById("barra");
+
+  aparecer();
+
+  // Cuadros verticales: en celular ocupan todo ("cubrir"); en escritorio van enteros en su columna ("contener")
+  const apaisado = matchMedia("(min-aspect-ratio: 1/1)").matches;
+
+  const pelicula = crearCuadros(canvas, {
+    fuente: "medios/cuadros/toma-####.webp", total: 90, encaje: apaisado ? "contener" : "cubrir", foco: [0.5, 0.52],
+    alCargar: p => { barra.style.transform = `scaleX(${p})`; if (p >= 1) barra.style.opacity = 0; },
+  });
+
+  // En cuanto hay un cuadro, el póster se va; si no carga nada, queda el póster y la página funciona igual
+  pelicula.lista.then(() => poster.classList.add("fuera")).catch(() => { barra.style.opacity = 0; });
+
+  // "Reducir movimiento": un solo cuadro quieto (el póster) y el texto ya puesto
+  if (reducido()) {
+    caps.forEach(c => { c.style.opacity = 1; c.style.transform = "none"; c.style.gridArea = "auto"; });
+    cierre.style.opacity = 1; cierre.classList.add("on");
+  } else {
+    conScroll(pelicula, pista, { suavizar: 0.12 });
+
+    const limitar = (v) => Math.max(0, Math.min(1, v));
+    escenario(pista, (p) => {
+      // 0 = portada, 1 a 3 = capítulos, 4 = cierre
+      const { indice, local } = capitulos(p, [0, 0.12, 0.40, 0.68, 0.84, 1]);
+      titulo.style.opacity = limitar(1 - p / 0.14);
+      caps.forEach((c, i) => {
+        const activo = indice === i + 1;
+        const o = activo ? Math.min(1, local * 5, (1 - local) * 5 + 0.0) : 0;
+        c.style.opacity = o.toFixed(3);
+        c.style.transform = `translateY(${((1 - o) * 10).toFixed(1)}px)`;
+      });
+      puntos.forEach((d, i) => d.classList.toggle("on", indice > i));
+      const k = limitar((p - 0.86) / 0.1);
+      cierre.style.opacity = k.toFixed(3);
+      cierre.style.transform = `translateY(${((1 - k) * 14).toFixed(1)}px)`;
+      cierre.classList.toggle("on", k > 0.6);
+    });
+  }
+</script>
+</body>
+</html>

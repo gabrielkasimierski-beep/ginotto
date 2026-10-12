@@ -54,20 +54,69 @@
   const copy = document.querySelector('.hero-copy'), cta = document.querySelector('.hero-cta');
   const capas = [...document.querySelectorAll('#capas li')];
   const cierre = document.getElementById('cierre');
-  const vertical = matchMedia('(max-aspect-ratio: 1/1)').matches;      // celu: clips verticales
-  const SRC = vertical ? ['assets/video/hero-a-v.mp4', 'assets/video/hero-b-v.mp4'] : ['assets/video/hero-a.mp4', 'assets/video/hero-b.mp4'];
 
-  [[a, SRC[0]], [b, SRC[1]]].forEach(([v, src]) => {
-    v.muted = true; v.playsInline = true; v.src = src; v.pause();
+  // Detección de red lenta o ahorro de datos
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const isSlow = connection ? (connection.saveData || /2g/.test(connection.effectiveType)) : false;
+
+  let lastVertical = null;
+  function checkSource() {
+    const vertical = matchMedia('(max-aspect-ratio: 1/1)').matches;      // celu: clips verticales
+    if (vertical === lastVertical) return; // evitar reasignar si no cambió
+    lastVertical = vertical;
+
+    const posters = vertical ? ['assets/video/poster-a-v.webp', 'assets/video/poster-b-v.webp'] : ['assets/video/poster-a.webp', 'assets/video/poster-b.webp'];
+    const SRC = vertical ? ['assets/video/hero-a-v.mp4', 'assets/video/hero-b-v.mp4'] : ['assets/video/hero-a.mp4', 'assets/video/hero-b.mp4'];
+
+    const stage = document.querySelector('.stage');
+    if (stage) stage.style.backgroundImage = `url(${posters[0]})`;
+    if (stage) stage.style.backgroundSize = 'cover';
+    if (stage) stage.style.backgroundPosition = 'center';
+
+    a.poster = posters[0];
+    b.poster = posters[1];
+
+    [[a, SRC[0]], [b, SRC[1]]].forEach(([v, src]) => {
+      v.muted = true; v.playsInline = true;
+      // iOS Safari requiere muted y playsinline para permitir scrub via currentTime sin que intente reproducir pantalla completa y fallen cosas
+      v.src = src;
+      v.pause();
+    });
+
+    // resetear applied para forzar que vuelva a hacer el scrub al primer tick
+    // tras un cambio de aspecto.
+    appliedA = -1;
+    appliedB = -1;
+  }
+
+  [[a, 0], [b, 1]].forEach(([v]) => {
     v.addEventListener('loadedmetadata', () => { try { v.currentTime = 0.04; } catch (e) {} readScroll(); });
   });
   a.addEventListener('loadeddata', () => a.classList.add('ready'), { once: true });
 
+  checkSource();
+
   const nav = document.querySelector('.nav');
   let target = 0, smooth = 0, appliedA = -1, appliedB = -1, ultimo = null, navSolido = false;
+  let useFallback = false;
+
+  function goFallback() {
+    if (useFallback) return;
+    useFallback = true;
+    a.removeAttribute('src'); b.removeAttribute('src');
+    a.load(); b.load();
+    a.classList.add('ready');
+  }
+
+  // Si a los 4s no se alcanzó readyState >= 2 (se puede reproducir) se asume fallback
+  if (isSlow) goFallback();
+  setTimeout(() => { if (!useFallback && (a.readyState < 2 || b.readyState < 2)) goFallback(); }, 4000);
+  a.addEventListener('error', goFallback);
+  b.addEventListener('error', goFallback);
 
   function readScroll() {
-    const dA = a.duration, dB = (b && b.duration) ? b.duration : 0;
+    let dA = a.duration, dB = (b && b.duration) ? b.duration : 0;
+    if (useFallback) { dA = 1; dB = 1; }
     if (!dA || !isFinite(dA)) return;
     // Rango útil = el recorrido menos la pantalla que ocupa el escenario fijo. La cadena termina al 85%: el 15% que
     // queda es la salida (B sostiene su último cuadro mientras la carta sube), sin scroll muerto.
@@ -79,6 +128,7 @@
 
   function seekTo(el, t, last) {
     // pedir un cuadro nuevo SOLO cuando el decodificador terminó de pintar el anterior (si no: negros y tirones)
+    if (useFallback) return t; // Evitar tocar el video si estamos en fallback
     if (!el || !el.duration || el.seeking || el.readyState < 2) return last;
     const c = topes(t, 0, el.duration - 0.04);
     if (Math.abs(last - c) < 0.012) return last;
@@ -110,24 +160,30 @@
     readScroll();
     smooth = reducido ? target : smooth + (target - smooth) * 0.18;
     if (Math.abs(target - smooth) < 0.01) smooth = target;
-    const dA = a.duration || 0, dB = (b && b.duration) ? b.duration : 0;
+    let dA = a.duration || 0, dB = (b && b.duration) ? b.duration : 0;
+    if (useFallback) { dA = 1; dB = 1; }
+
     if (dA && smooth <= dA - 0.04) {
       appliedA = seekTo(a, smooth, appliedA);
       if (b && b.style.opacity !== '0') b.style.opacity = '0';          // A en pantalla
     } else if (dA && b) {
       appliedB = seekTo(b, smooth - dA, appliedB);                      // seguimos dentro de B
       // el traspaso es un cambio instantáneo de opacidad: sin fundido, o se ve la costura
-      if (b.style.opacity !== '1' && b.readyState >= 2) b.style.opacity = '1';
+      if (b.style.opacity !== '1' && (b.readyState >= 2 || useFallback)) b.style.opacity = '1';
     }
     aCopy(dA && dB ? topes((smooth - dA) / dB, 0, 1) : 0);
     // pasado el hero, el menú gana un degradé oscuro para no pisar los títulos de la carta
     const solido = window.scrollY > (track.offsetHeight - window.innerHeight) * 0.85 + 40;
     if (nav && solido !== navSolido) { navSolido = solido; nav.classList.toggle('solid', solido); }
-    requestAnimationFrame(tick);
+    if (!document.hidden) requestAnimationFrame(tick);
   }
 
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) requestAnimationFrame(tick);
+  });
+
   addEventListener('scroll', readScroll, { passive: true });
-  addEventListener('resize', readScroll, { passive: true });
+  addEventListener('resize', () => { checkSource(); readScroll(); }, { passive: true });
   readScroll();
   requestAnimationFrame(tick);
 })();

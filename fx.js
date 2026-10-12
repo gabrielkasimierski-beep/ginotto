@@ -59,6 +59,11 @@
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const isSlow = connection ? (connection.saveData || /2g/.test(connection.effectiveType)) : false;
 
+  // Estado del scrub: declarado ANTES de usarlo (checkSource y readScroll lo tocan apenas cargan los videos)
+  const nav = document.querySelector('.nav');
+  let target = 0, smooth = 0, appliedA = -1, appliedB = -1, ultimo = null, navSolido = false;
+  let useFallback = false;
+
   let lastVertical = null;
   function checkSource() {
     const vertical = matchMedia('(max-aspect-ratio: 1/1)').matches;      // celu: clips verticales
@@ -96,10 +101,6 @@
 
   checkSource();
 
-  const nav = document.querySelector('.nav');
-  let target = 0, smooth = 0, appliedA = -1, appliedB = -1, ultimo = null, navSolido = false;
-  let useFallback = false;
-
   function goFallback() {
     if (useFallback) return;
     useFallback = true;
@@ -108,9 +109,10 @@
     a.classList.add('ready');
   }
 
-  // Si a los 4s no se alcanzó readyState >= 2 (se puede reproducir) se asume fallback
+  // Si a los 4 s el clip A todavía no tiene ni un cuadro (readyState < 2) se pasa al fallback con pósters.
+  // B puede tardar más: con redes lentas se sigue usando A y B entra apenas llega.
   if (isSlow) goFallback();
-  setTimeout(() => { if (!useFallback && (a.readyState < 2 || b.readyState < 2)) goFallback(); }, 4000);
+  setTimeout(() => { if (!useFallback && a.readyState < 2) goFallback(); }, 4000);
   a.addEventListener('error', goFallback);
   b.addEventListener('error', goFallback);
 

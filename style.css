@@ -277,6 +277,15 @@ body:has(#cart-fab:not([hidden])) footer{padding-bottom:120px}
   .cierre__n{display:none}
   .cierre__p::before{content:"Gino Doble \00B7  "}
   .pics3{grid-template-columns:repeat(3,1fr);gap:8px}
+  /* la carta en celu: dos columnas, así se ven varias burgas sin bajar una por una */
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}
+  .grid .card{gap:8px}
+  .grid .row{flex-direction:column;align-items:flex-start;gap:2px}
+  .grid .card h3{font-size:18px;line-height:1.05}
+  .grid .price{font-size:18px}
+  .grid .desc{font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .grid .shot{border-radius:14px}
+  .grid .card .add .btn-add{font-size:14px;padding:.4em 1.1em;min-height:44px}
 }
 
 /* ---------- Menos movimiento ---------- */

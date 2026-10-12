@@ -1,7 +1,7 @@
 const http=require('http'),fs=require('fs'),path=require('path');
 const PORT=process.env.PORT||8080;
 const T={'.html':'text/html;charset=utf-8','.css':'text/css','.js':'text/javascript','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.svg':'image/svg+xml','.glb':'model/gltf-binary','.json':'application/json','.mp4':'video/mp4'};
-const DATA_DIR=path.join(__dirname,'data'),STATE_FILE=path.join(DATA_DIR,'state.json');
+const DATA_DIR=process.env.GINOTTO_DATA_DIR||path.join(__dirname,'data'),STATE_FILE=path.join(DATA_DIR,'state.json');
 const ESTADOS=['nuevo','preparando','listo','entregado'];
 
 // ---- estado persistente (escritura atómica: tmp + rename) ----
@@ -60,9 +60,6 @@ async function api(q,r,url){
   if(!b.id||typeof b.id!=='string'||!b.estado||typeof b.estado!=='string')return json(r,400,{error:'id y estado requeridos'});
   const p=state.pedidos.find(x=>x.id===b.id);
   if(!p||!ESTADOS.includes(b.estado))return json(r,400,{error:'pedido o estado inválido'});
-  const idxActual=ESTADOS.indexOf(p.estado);
-  const idxNuevo=ESTADOS.indexOf(b.estado);
-  if(idxNuevo<=idxActual)return json(r,400,{error:'transición de estado inválida'});
   p.estado=b.estado;save();return json(r,200,{ok:true});
  }
  json(r,404,{error:'no existe'});

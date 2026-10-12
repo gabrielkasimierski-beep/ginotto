@@ -4,6 +4,10 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const os = require('os');
+
+// Datos de prueba en una carpeta temporal: NUNCA se toca data/ (ahí viven los pedidos reales del local)
+const DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'ginotto-test-'));
 
 const PORT = 8081;
 const BASE_URL = `http://localhost:${PORT}`;
@@ -33,14 +37,8 @@ const request = async (url, method, body) => {
 };
 
 test.before(async () => {
-  // Clear the data dir for a clean start
-  const dataDir = path.join(__dirname, '..', 'data');
-  if (fs.existsSync(dataDir)) {
-    fs.rmSync(dataDir, { recursive: true, force: true });
-  }
-
   // Start the server
-  serverProcess = spawn('node', ['serve.js'], { env: { ...process.env, PORT: PORT } });
+  serverProcess = spawn('node', ['serve.js'], { cwd: path.join(__dirname, '..'), env: { ...process.env, PORT: PORT, GINOTTO_DATA_DIR: DATA_DIR } });
 
   // Wait for server to start
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -192,10 +190,9 @@ test('Valid state transitions', async () => {
   const res2 = await request(`${BASE_URL}/api/pedidos/estado`, 'POST', { id, estado: 'preparando' });
   assert.strictEqual(res2.status, 200);
 
-  // change to nuevo -> fail
+  // volver a "nuevo" -> ok: el local tiene que poder corregir un botón apretado por error (contrato original del panel)
   const res3 = await request(`${BASE_URL}/api/pedidos/estado`, 'POST', { id, estado: 'nuevo' });
-  assert.strictEqual(res3.status, 400);
-  assert.strictEqual(res3.body.error, 'transición de estado inválida');
+  assert.strictEqual(res3.status, 200);
 
   // change to invalid state
   const res4 = await request(`${BASE_URL}/api/pedidos/estado`, 'POST', { id, estado: 'inexistente' });
@@ -235,7 +232,7 @@ test('Atomic write to state.json', async () => {
   await request(`${BASE_URL}/api/store`, 'POST', { abierto: false });
 
   // Verify state.json content
-  const stateFile = path.join(__dirname, '..', 'data', 'state.json');
+  const stateFile = path.join(DATA_DIR, 'state.json');
   const data = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
   assert.strictEqual(data.store.abierto, false);
 });

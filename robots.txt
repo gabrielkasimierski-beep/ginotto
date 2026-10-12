@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ginotto.ar/sitemap.xml

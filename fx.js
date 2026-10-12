@@ -63,6 +63,10 @@
   const nav = document.querySelector('.nav');
   let target = 0, smooth = 0, appliedA = -1, appliedB = -1, ultimo = null, navSolido = false;
   let useFallback = false;
+  // medidas cacheadas: se releen solo al cambiar el tamaño (antes se leían en cada cuadro y forzaban layout)
+  let trackHeight = 0, winHeight = 0;
+  function measure() { trackHeight = track.offsetHeight; winHeight = window.innerHeight; }
+  measure();
 
   let lastVertical = null;
   function checkSource() {
@@ -123,7 +127,7 @@
     // Rango útil = el recorrido menos la pantalla que ocupa el escenario fijo. La cadena termina al 85%: el 15% que
     // queda es la salida (B sostiene su último cuadro mientras la carta sube), sin scroll muerto.
     const SCRUB_END = 0.85;
-    const total = (track.offsetHeight - window.innerHeight) * SCRUB_END;
+    const total = (trackHeight - winHeight) * SCRUB_END;
     const prog = total > 0 ? topes(window.scrollY / total, 0, 1) : 0;
     target = prog * (dA + dB - 0.04);
   }
@@ -175,7 +179,7 @@
     }
     aCopy(dA && dB ? topes((smooth - dA) / dB, 0, 1) : 0);
     // pasado el hero, el menú gana un degradé oscuro para no pisar los títulos de la carta
-    const solido = window.scrollY > (track.offsetHeight - window.innerHeight) * 0.85 + 40;
+    const solido = window.scrollY > (trackHeight - winHeight) * 0.85 + 40;
     if (nav && solido !== navSolido) { navSolido = solido; nav.classList.toggle('solid', solido); }
     if (!document.hidden) requestAnimationFrame(tick);
   }
@@ -185,7 +189,7 @@
   });
 
   addEventListener('scroll', readScroll, { passive: true });
-  addEventListener('resize', () => { checkSource(); readScroll(); }, { passive: true });
+  addEventListener('resize', () => { checkSource(); measure(); readScroll(); }, { passive: true });
   readScroll();
   requestAnimationFrame(tick);
 })();

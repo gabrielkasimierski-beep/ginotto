@@ -13,7 +13,7 @@ const fotoDe = b => FOTOS.has(b.id) ? `assets/foto/${b.id}.webp` : `assets/${b.i
 const tarjeta = (b, i) => `
   <article class="card" data-item="${b.id}" style="--i:${i % 3};--ac:${b.c || '#F5B31B'}">
     <div class="shot${FOTOS.has(b.id) ? ' shot--foto' : ''}">
-      <img src="${fotoDe(b)}" alt="${b.n}" width="768" height="1024" loading="lazy" draggable="false">
+      <img src="${fotoDe(b)}" alt="${b.n}" width="768" height="1024" loading="lazy" decoding="async" draggable="false">
       <span class="soldout-badge">Sin stock</span>
     </div>
     <div class="row"><h3>${b.n}</h3><strong class="price">${fmt(b.p)}</strong></div>
@@ -30,7 +30,7 @@ $('#list-extra').innerHTML = rows(extras);
 // Combos y bebidas: foto de estudio 3:4 (assets/foto/<id>.webp para combos, assets/foto/bebida-*.webp para bebidas)
 const foto = (b, src, i, alt) => `
   <article class="card" data-item="${b.id}" style="--i:${(i || 0) % 3}">
-    <div class="shot shot--foto"><img src="${src}" alt="${alt || b.n}" width="768" height="1024" loading="lazy" draggable="false"><span class="soldout-badge">Sin stock</span></div>
+    <div class="shot shot--foto"><img src="${src}" alt="${alt || b.n}" width="768" height="1024" loading="lazy" decoding="async" draggable="false"><span class="soldout-badge">Sin stock</span></div>
     <div class="row"><h3>${b.n}</h3><strong class="price">${fmt(b.p)}</strong></div>
     ${b.d ? `<p class="desc">${b.d}</p>` : ''}
     <div class="add" data-add="${b.id}"></div>

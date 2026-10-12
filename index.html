@@ -14,23 +14,39 @@
 <body>
 
 <div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
-<header class="hero" id="top">
-  <svg class="splat s1" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <svg class="splat s2" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <div class="hero-inner">
-    <img class="hero-logo" src="assets/logo.webp" alt="Ginotto Burger, jirafa con gorra violeta" width="450" height="450">
-    <p class="kicker">Hamburguesería · Villa Urquiza</p>
-    <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
-    <div class="hero-cta">
-      <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
-      <a class="btn btn-ghost" href="#carta">Ver la carta</a>
+<header class="peli" id="top">
+  <!-- Portada con película: la Gino Doble se arma y se desarma con el scroll (kit del Motor: kit/cuadros.js).
+       Sin JS o sin cuadros queda el póster y la página funciona igual. -->
+  <div class="peli-pista" data-escenario>
+    <div class="peli-escena" data-escena>
+      <img class="peli-poster" id="peli-poster" src="assets/pelicula/poster.jpg" alt="Gino Doble: doble carne smash, cheddar y bacon" width="600" height="1062" fetchpriority="high">
+      <canvas class="peli-canvas" id="peli-canvas" aria-hidden="true"></canvas>
+
+      <div class="peli-barra">
+        <a class="peli-marca" href="#top" aria-label="Ginotto Burger"><img src="assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
+        <a class="btn peli-pedir" href="#carta">Pedir</a>
+      </div>
+
+      <div class="peli-titulo" id="peli-titulo">
+        <p class="kicker">Hamburguesería · Villa Urquiza</p>
+        <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
+      </div>
+
+      <div class="peli-caps" aria-hidden="true">
+        <p class="peli-cap"><b>Doble</b> carne smash</p>
+        <p class="peli-cap"><b>Cheddar</b> y bacon Sugardale</p>
+        <p class="peli-cap"><b>Aderezo</b> Gino</p>
+        <div class="peli-puntos"><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="peli-cierre" id="peli-cierre">
+        <p class="peli-precio"><b>Gino Doble</b> · $18.000</p>
+        <a class="btn btn-big" href="#carta">Pedir ahora</a>
+        <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+      </div>
+
+      <div class="peli-carga" aria-hidden="true"><i id="peli-carga"></i></div>
     </div>
-    <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
-  </div>
-  <div class="hero-burgers" aria-hidden="true">
-    <img src="assets/cheese-doble-cream.webp" alt="" class="hb hb1">
-    <img src="assets/gino-doble-cream.webp" alt="" class="hb hb2">
-    <img src="assets/otto-doble-cream.webp" alt="" class="hb hb3">
   </div>
   <div class="drip"></div>
 </header>
@@ -152,5 +168,58 @@
 <script src="store.js"></script>
 <script src="app.js"></script>
 <script src="cart.js"></script>
+<script type="module">
+  import { escenario, capitulos, reducido } from "./kit/motor-scroll.js";
+  import { crearCuadros, conScroll } from "./kit/cuadros.js";
+
+  const pista = document.querySelector(".peli-pista");
+  const canvas = document.getElementById("peli-canvas");
+  const poster = document.getElementById("peli-poster");
+  const titulo = document.getElementById("peli-titulo");
+  const capsCaja = document.querySelector(".peli-caps");
+  const caps = [...document.querySelectorAll(".peli-cap")];
+  const puntos = [...document.querySelectorAll(".peli-puntos i")];
+  const cierre = document.getElementById("peli-cierre");
+  const carga = document.getElementById("peli-carga");
+
+  // El precio sale de la carta (menu-data.js): una sola fuente
+  try {
+    const g = MENU.find(i => i.id === "gino-doble");
+    if (g) cierre.querySelector(".peli-precio").innerHTML = `<b>${g.n}</b> · ${fmt(g.p)}`;
+  } catch (e) {}
+
+  if (reducido()) {
+    // "Reducir movimiento": un solo cuadro quieto, título y cierre ya puestos, sin pista larga
+    document.documentElement.classList.add("peli-quieta");
+  } else {
+    // Cuadros verticales: en celular ocupan todo ("cubrir"); en escritorio van enteros en su columna ("contener")
+    const apaisado = matchMedia("(min-aspect-ratio: 1/1)").matches;
+    const pelicula = crearCuadros(canvas, {
+      fuente: "assets/pelicula/toma-####.webp", total: 90, encaje: apaisado ? "contener" : "cubrir", foco: [0.5, 0.52],
+      alCargar: p => { carga.style.transform = `scaleX(${p})`; if (p >= 1) carga.style.opacity = 0; },
+    });
+    // En cuanto hay un cuadro el póster se va; si no carga nada queda el póster y la página funciona igual
+    pelicula.lista.then(() => poster.classList.add("fuera")).catch(() => { carga.style.opacity = 0; });
+    conScroll(pelicula, pista, { suavizar: 0.12 });
+
+    const limitar = v => Math.max(0, Math.min(1, v));
+    escenario(pista, p => {
+      // 0 = portada, 1 a 3 = capítulos, 4 = cierre
+      const { indice, local } = capitulos(p, [0, 0.12, 0.40, 0.68, 0.84, 1]);
+      titulo.style.opacity = limitar(1 - p / 0.14);
+      caps.forEach((c, i) => {
+        const o = indice === i + 1 ? Math.min(1, local * 5, (1 - local) * 5) : 0;
+        c.style.opacity = o.toFixed(3);
+        c.style.transform = `translateY(${((1 - o) * 10).toFixed(1)}px)`;
+      });
+      puntos.forEach((d, i) => d.classList.toggle("on", indice > i));
+      const k = limitar((p - 0.86) / 0.1);
+      cierre.style.opacity = k.toFixed(3);
+      cierre.style.transform = `translateY(${((1 - k) * 14).toFixed(1)}px)`;
+      cierre.classList.toggle("on", k > 0.6);
+      capsCaja.style.opacity = (1 - k).toFixed(3);
+    });
+  }
+</script>
 </body>
 </html>

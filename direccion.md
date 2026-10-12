@@ -48,7 +48,19 @@ desarmándose con el scroll, sobre el mismo papel crema con spray violeta y nara
 - [ ] ¿Se aprueba el **humor** de los textos de las bandas? (propuestas en `docs/copy-propuestas.md` de la rama de Jules)
 - [ ] Material real: ¿Gaby puede hacer un video corto real de la burga sobre una mesa? Reemplaza al generado con IA.
 
-## 6. Cómo se construye
+## 6. Estado (12-oct-2026)
+
+Rama `motor/portada-integrada`: la portada con película ya está **dentro del `index.html` real**, reemplazando
+al hero viejo; la carta, la barra de categorías y todo el sistema de pedidos quedan como en la base.
+- Película: `assets/pelicula/toma-0001..0090.webp` + `poster.jpg`; kit del Motor en `kit/` (`motor-scroll.js`,
+  `cuadros.js`). Sin dependencias.
+- Celular: cuadros a pantalla completa. Escritorio (apaisado): película en columna derecha, texto a la izquierda.
+- "Reducir movimiento": un cuadro quieto con el título y el cierre ya puestos, sin pista larga.
+- El precio del cierre se lee de `menu-data.js`; no hay datos nuevos inventados.
+- Probado a 390 y 1280 px con `herramientas-lab/pruebas/portada-integrada.mjs` (película, carta y pedido), sin
+  errores de consola. Los cuadros son 9:16 generados con IA; no hay versión 16:9.
+
+## 7. Cómo se construye
 
 1. Recurso: clip 9:16 sobre crema → cuadros WebP (`herramientas/video-a-cuadros.js` del kit).
 2. Maqueta **quieta** de la portada (kit: `tokens.css` con la paleta de `identidad/visual.md`).

@@ -218,6 +218,8 @@
       cierre.style.opacity = k.toFixed(3);
       cierre.style.transform = `translateY(${((1 - k) * 14).toFixed(1)}px)`;
       cierre.classList.toggle("on", k > 0.6);
+      // invisible = fuera del orden de tabulación (si no, con teclado se llega a un botón que no se ve)
+      cierre.style.visibility = k > 0 ? "visible" : "hidden";
       capsCaja.style.opacity = (1 - k).toFixed(3);
     });
   }

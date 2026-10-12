@@ -12,3 +12,6 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# Laboratorio de propuestas (worktrees y opiniones locales)
+.lab/

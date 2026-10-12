@@ -37,6 +37,32 @@ const bebidas = [
   { id: 'bebida-agua-gas', n: 'Agua mineral con gas', d: '', p: 3500, img: 'bebida-agua-gas-cream.webp', c: '#2A7DE1' },
   { id: 'bebida-cerveza', n: 'Cerveza', d: '', p: 6000, img: 'bebida-cerveza-cream.webp', c: '#F2A91E' }
 ];
+// Datos del local para SEO y JSON-LD / footer
+const LOCAL_DATA = {
+  name: "Ginotto Burger",
+  address: { streetAddress: "Av. Monroe 3582", addressLocality: "Villa Urquiza", addressRegion: "CABA" },
+  telephone: "+54 9 11 7887 2874",
+  urls: {
+    whatsapp: "https://wa.me/541178872874",
+    instagram: "https://www.instagram.com/ginotto.ar/",
+    mail: "ginottoburger@gmail.com",
+    map: "https://maps.google.com/?q=Av.+Monroe+3582,+Buenos+Aires"
+  },
+  openingHoursSpecification: [
+    { dayOfWeek: ["Monday", "Tuesday"], opens: "11:30", closes: "14:30" },
+    { dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"], opens: "11:30", closes: "14:30" },
+    { dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"], opens: "19:30", closes: "23:00" },
+    { dayOfWeek: "Sunday", opens: "19:30", closes: "23:00" }
+  ],
+  horariosHTML: `
+    <table class="hours">
+      <tr><th>Lun – Mar</th><td>Mediodía 11:30 – 14:30</td></tr>
+      <tr><th>Mié – Sáb</th><td>Mediodía 11:30 – 14:30<br>Noche 19:30 – 23:00</td></tr>
+      <tr><th>Domingo</th><td>Noche 19:30 – 23:00</td></tr>
+    </table>
+  `
+};
+
 // Lista plana para carrito y panel. nombre = lo que ve el local en la comanda.
 const MENU = [].concat(
   burgas.map(i => ({ id: i.id, nombre: i.n, precio: i.p, cat: 'Burgas' })),

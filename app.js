@@ -56,3 +56,55 @@ addEventListener('pointerup', () => { dn = false; car.classList.remove('drag'); 
 car.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
 
 $('#grid-bebidas').innerHTML = bebidas.map((b, i) => foto(b, `assets/foto/${b.img.replace('-cream.webp', '')}.webp`, i)).join('');
+
+// Insertar JSON-LD
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": LOCAL_DATA.name,
+  "image": "https://ginotto.ar/assets/foto/gino-doble.webp",
+  "@id": "https://ginotto.ar/",
+  "url": "https://ginotto.ar/",
+  "telephone": LOCAL_DATA.telephone,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": LOCAL_DATA.address.streetAddress,
+    "addressLocality": LOCAL_DATA.address.addressLocality,
+    "addressRegion": LOCAL_DATA.address.addressRegion,
+    "addressCountry": "AR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -34.5670868,
+    "longitude": -58.4842512
+  },
+  "openingHoursSpecification": LOCAL_DATA.openingHoursSpecification.map(oh => ({
+    "@type": "OpeningHoursSpecification",
+    ...oh
+  })),
+  "hasMenu": "https://ginotto.ar/",
+  "sameAs": [
+    LOCAL_DATA.urls.instagram
+  ]
+};
+
+const script = document.createElement('script');
+script.type = 'application/ld+json';
+script.text = JSON.stringify(ld);
+document.head.appendChild(script);
+
+// Reemplazar info de la sección del local
+const infoLocal = $('.local-grid .info');
+if (infoLocal) {
+  infoLocal.innerHTML = `
+    <h3>Dónde estamos</h3>
+    <p class="big">${LOCAL_DATA.address.streetAddress}<br><small>${LOCAL_DATA.address.addressLocality}, ${LOCAL_DATA.address.addressRegion}</small></p>
+    <h3>Horarios</h3>
+    ${LOCAL_DATA.horariosHTML}
+    <div class="contact">
+      <a class="btn-primary" href="${LOCAL_DATA.urls.whatsapp}" target="_blank" rel="noopener">WhatsApp ${LOCAL_DATA.telephone.replace('+54 9 ', '')}</a>
+      <a class="btn-ghost" href="${LOCAL_DATA.urls.instagram}" target="_blank" rel="noopener">@ginotto.ar</a>
+    </div>
+    <p class="mail"><a href="mailto:${LOCAL_DATA.urls.mail}">${LOCAL_DATA.urls.mail}</a></p>
+  `;
+}

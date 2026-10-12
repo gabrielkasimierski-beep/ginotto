@@ -16,6 +16,8 @@
 </head>
 <body style="background:#0b0a09">
 
+<a href="#carta" class="skip-link">Saltar al contenido</a>
+
 <div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
 
 <!-- ============ NAV: fijo, sin fondo, pegado a los costados ============ -->
@@ -210,7 +212,7 @@
 <div id="drawer" class="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="drawer-title">
   <div class="drawer-bg" id="drawer-bg"></div>
   <div class="drawer-panel">
-    <div class="drawer-head"><h2 id="drawer-title">Tu pedido</h2><button type="button" id="drawer-close" aria-label="Cerrar">&times;</button></div>
+    <div class="drawer-head"><h2 id="drawer-title" tabindex="-1">Tu pedido</h2><button type="button" id="drawer-close" aria-label="Cerrar">&times;</button></div>
     <div id="drawer-body"></div>
   </div>
 </div>
@@ -218,6 +220,7 @@
 <script src="menu-data.js"></script>
 <script src="store.js"></script>
 <script src="app.js"></script>
+<div id="sr-announcer" aria-live="polite" class="sr-only"></div>
 <script src="cart.js"></script>
 <script src="fx.js"></script>
 </body>

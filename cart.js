@@ -12,9 +12,10 @@ const total = () => Object.entries(cart).reduce((s, [id, q]) => s + BY_ID[id].pr
 // ---- controles Agregar (+/−) ----
 function renderAdd(el) {
   const id = el.dataset.add, q = cart[id] || 0;
+  const n = BY_ID[id] ? BY_ID[id].nombre || BY_ID[id].n || 'producto' : 'producto';
   el.innerHTML = q
-    ? `<div class="qty"><button type="button" data-d="-1" aria-label="Quitar uno">−</button><b>${q}</b><button type="button" data-d="1" aria-label="Agregar uno">+</button></div>`
-    : `<button type="button" class="btn-add" data-d="1">Agregar</button>`;
+    ? `<div class="qty"><button type="button" data-d="-1" aria-label="Quitar uno de ${n}">−</button><b aria-label="${q} de ${n}">${q}</b><button type="button" data-d="1" aria-label="Agregar otro ${n}">+</button></div>`
+    : `<button type="button" class="btn-add" data-d="1" aria-label="Agregar ${n}">Agregar</button>`;
   const off = !disponible(id);
   el.querySelectorAll('button').forEach(b => { if (off && b.dataset.d === '1') b.disabled = true; });
 }
@@ -34,6 +35,12 @@ function change(id, d) {
   const q = Math.max(0, Math.min(99, (cart[id] || 0) + d));
   if (q) cart[id] = q; else delete cart[id];
   persist(); paint();
+  const n = BY_ID[id] ? BY_ID[id].nombre || BY_ID[id].n || 'producto' : 'producto';
+  const announcer = $('#sr-announcer');
+  if (announcer) {
+    if (q === 0) announcer.textContent = `${n} eliminado del pedido. Total: ${fmt(total())}`;
+    else announcer.textContent = `${q} ${n} en el pedido. Total: ${fmt(total())}`;
+  }
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('.add button');
@@ -42,9 +49,17 @@ document.addEventListener('click', e => {
 
 // ---- drawer / checkout ----
 const drawer = $('#drawer');
-let vista = 'carrito', lastNro = null, errMsg = '';
-function openDrawer(v) { vista = v || 'carrito'; errMsg = ''; drawer.hidden = false; document.body.classList.add('noscroll'); renderDrawer(); }
-function closeDrawer() { drawer.hidden = true; document.body.classList.remove('noscroll'); }
+let vista = 'carrito', lastNro = null, errMsg = '', lastFocus = null;
+function openDrawer(v) {
+  lastFocus = document.activeElement;
+  vista = v || 'carrito'; errMsg = ''; drawer.hidden = false; document.body.classList.add('noscroll'); renderDrawer();
+  const title = $('#drawer-title');
+  if (title) title.focus();
+}
+function closeDrawer() {
+  drawer.hidden = true; document.body.classList.remove('noscroll');
+  if (lastFocus) lastFocus.focus();
+}
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 function renderDrawer() {
@@ -74,11 +89,20 @@ function renderDrawer() {
     <div class="sum"><span>Total</span><strong>${fmt(total())}</strong></div>
     ${!abierto() ? '<p class="warn">El local está cerrado ahora. Podés ver la carta pero no enviar pedidos.</p>' : ''}
     <form id="co" novalidate>
-      <label>Nombre<input id="f-nombre" autocomplete="name" required value="${esc(keep['f-nombre'] ?? saved.n ?? '')}"></label>
-      <label>Teléfono (WhatsApp)<input id="f-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="11 5555 5555" required value="${esc(keep['f-tel'] ?? saved.t ?? '')}"></label>
-      <div class="tipo"><label><input type="radio" name="tipo" value="retiro" ${tipoPrev === 'retiro' ? 'checked' : ''}><span>Retiro</span></label>
-        <label><input type="radio" name="tipo" value="delivery" ${tipoPrev === 'delivery' ? 'checked' : ''}><span>Delivery</span></label></div>
-      <label>Nota (opcional)<textarea id="f-nota" rows="2" maxlength="300" placeholder="Sin cebolla, dirección si es delivery...">${esc(keep['f-nota'] ?? '')}</textarea></label>
+      <label for="f-nombre">Nombre</label>
+      <input id="f-nombre" autocomplete="name" required aria-describedby="co-err" value="${esc(keep['f-nombre'] ?? saved.n ?? '')}">
+      <label for="f-tel">Teléfono (WhatsApp)</label>
+      <input id="f-tel" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="co-err" placeholder="11 5555 5555" required value="${esc(keep['f-tel'] ?? saved.t ?? '')}">
+
+      <fieldset class="tipo" role="radiogroup">
+        <legend class="sr-only">Tipo de entrega</legend>
+        <label for="f-retiro"><input id="f-retiro" type="radio" name="tipo" value="retiro" ${tipoPrev === 'retiro' ? 'checked' : ''}><span>Retiro</span></label>
+        <label for="f-delivery"><input id="f-delivery" type="radio" name="tipo" value="delivery" ${tipoPrev === 'delivery' ? 'checked' : ''}><span>Delivery</span></label>
+      </fieldset>
+
+      <label for="f-nota">Nota (opcional)</label>
+      <textarea id="f-nota" rows="2" maxlength="300" placeholder="Sin cebolla, dirección si es delivery...">${esc(keep['f-nota'] ?? '')}</textarea>
+
       <p class="err" id="co-err" role="alert">${esc(errMsg)}</p>
       <button type="submit" class="btn btn-big" ${blocked ? 'disabled' : ''}>Enviar pedido</button>
     </form>`;
@@ -106,6 +130,19 @@ async function enviar(e) {
 $('#drawer-close').onclick = closeDrawer;
 $('#drawer-bg').onclick = closeDrawer;
 addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.hidden) closeDrawer(); });
+drawer.addEventListener('keydown', e => {
+  if (e.key === 'Tab') {
+    const focusables = Array.from(drawer.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first || document.activeElement === $('#drawer-title')) { last.focus(); e.preventDefault(); }
+    } else {
+      if (document.activeElement === last || document.activeElement === $('#drawer-title')) { first.focus(); e.preventDefault(); }
+    }
+  }
+});
 $('#cart-fab').onclick = () => openDrawer('carrito');
 document.querySelectorAll('[data-open-checkout]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); openDrawer('carrito'); }));
 

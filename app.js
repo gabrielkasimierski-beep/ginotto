@@ -13,7 +13,7 @@ const fotoDe = b => FOTOS.has(b.id) ? `assets/foto/${b.id}.webp` : `assets/${b.i
 const tarjeta = (b, i) => `
   <article class="card" data-item="${b.id}" style="--i:${i % 3};--ac:${b.c || '#F5B31B'}">
     <div class="shot${FOTOS.has(b.id) ? ' shot--foto' : ''}">
-      <img src="${fotoDe(b)}" alt="${b.n}" width="768" height="1024" loading="lazy" draggable="false">
+      <img src="${fotoDe(b)}" alt="" width="768" height="1024" loading="lazy" draggable="false">
       <span class="soldout-badge">Sin stock</span>
     </div>
     <div class="row"><h3>${b.n}</h3><strong class="price">${fmt(b.p)}</strong></div>
@@ -30,7 +30,7 @@ $('#list-extra').innerHTML = rows(extras);
 // Combos y bebidas: foto de estudio 3:4 (assets/foto/<id>.webp para combos, assets/foto/bebida-*.webp para bebidas)
 const foto = (b, src, i, alt) => `
   <article class="card" data-item="${b.id}" style="--i:${(i || 0) % 3}">
-    <div class="shot shot--foto"><img src="${src}" alt="${alt || b.n}" width="768" height="1024" loading="lazy" draggable="false"><span class="soldout-badge">Sin stock</span></div>
+    <div class="shot shot--foto"><img src="${src}" alt="" width="768" height="1024" loading="lazy" draggable="false"><span class="soldout-badge">Sin stock</span></div>
     <div class="row"><h3>${b.n}</h3><strong class="price">${fmt(b.p)}</strong></div>
     ${b.d ? `<p class="desc">${b.d}</p>` : ''}
     <div class="add" data-add="${b.id}"></div>
@@ -40,14 +40,16 @@ const car = $('#carousel');
 car.innerHTML = combos.map((c, i) => foto(c, `assets/foto/${c.id}.webp`, i, c.id === 'combo-ginotto' ? c.n : 'Combo ' + c.n)).join('');
 const step = () => car.querySelector('.card').offsetWidth + 18;
 const bp = $('.car-btn.prev'), bn = $('.car-btn.next');
-bp.onclick = () => car.scrollBy({ left: -step(), behavior: 'smooth' });
-bn.onclick = () => car.scrollBy({ left: step(), behavior: 'smooth' });
+bp.onclick = () => car.scrollBy({ left: -step(), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+bn.onclick = () => car.scrollBy({ left: step(), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 const upd = () => {
-  bp.disabled = car.scrollLeft < 8;
-  bn.disabled = car.scrollLeft > car.scrollWidth - car.clientWidth - 8;
+  bp.disabled = Math.ceil(car.scrollLeft) <= 5;
+  bn.disabled = Math.ceil(car.scrollLeft) >= car.scrollWidth - car.clientWidth - 5;
   if (car.scrollLeft > 20) $('.swipe-hint').style.opacity = 0;
 };
-car.addEventListener('scroll', upd, { passive: true }); upd();
+car.addEventListener('scroll', upd, { passive: true });
+addEventListener('resize', upd, { passive: true });
+upd();
 // arrastre con mouse (desktop)
 let dn = false, sx = 0, sl = 0, moved = false;
 car.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; dn = true; moved = false; sx = e.clientX; sl = car.scrollLeft; });

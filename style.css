@@ -35,7 +35,7 @@ a{color:inherit}
 .nav-links a:hover{color:var(--mostaza)}
 .btn-nav{background:var(--mostaza);color:#0b0a09;font-size:13.5px;font-weight:700;padding:11px 20px;border-radius:999px;text-decoration:none;transition:filter .2s}
 .btn-nav:hover{filter:brightness(.88)}
-.burger{display:none;width:42px;height:42px;padding:0;border:0;border-radius:999px;background:var(--frost);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;cursor:pointer;align-items:center;justify-content:center}
+.burger{display:none;width:44px;height:44px;padding:0;border:0;border-radius:999px;background:var(--frost);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;cursor:pointer;align-items:center;justify-content:center}
 .burger .i-close{display:none}
 .burger[aria-expanded="true"] .i-open{display:none}
 .burger[aria-expanded="true"] .i-close{display:block}
@@ -94,7 +94,7 @@ h2{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(48px,7vw,
 .card h3{margin:0;font-family:var(--titulo);font-weight:700;font-size:23px;letter-spacing:-.005em;text-transform:uppercase;color:#fff}
 .price{font-family:var(--titulo);font-weight:700;font-size:22px;letter-spacing:.01em;color:var(--mostaza);white-space:nowrap}
 .desc{margin:0;font-size:14.5px;line-height:1.5;color:var(--t-70)}
-.card .add{margin-top:6px;justify-content:flex-start}
+.card .add{margin-top:auto;justify-content:flex-start}
 
 /* entradas: las tarjetas suben de a una (sin .anim, todo se ve) */
 .reveal .grid .card,.reveal .carousel .card{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease-quint),transform .7s var(--ease-quint);transition-delay:calc(var(--i,0) * 90ms)}
@@ -112,8 +112,8 @@ h2{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(48px,7vw,
 .list span{font-size:14px;color:var(--t-55)}
 .list i{flex:1;min-width:14px;margin-bottom:.5em;border-bottom:2px dotted rgba(245,179,27,.35)}
 .list li .add{margin:0;align-self:center}
-.list li .add .btn-add{padding:.3em 1em;font-size:14px;min-height:40px}
-.list li .add .qty button{width:38px;height:38px;font-size:1.3rem}
+.list li .add .btn-add{padding:.3em 1em;font-size:14px;min-height:44px}
+.list li .add .qty button{width:44px;height:44px;font-size:1.3rem}
 .list li .add .qty{gap:8px}
 
 /* combos: carrusel */
@@ -167,7 +167,7 @@ footer .foot-grid a:not(.logo):hover{color:var(--mostaza)}
 /* ---------- Pedido propio: agregar, carrito, checkout ---------- */
 .add{margin-top:10px;display:flex;justify-content:center}
 .btn-add,.qty button{font-family:var(--texto);font-weight:700;cursor:pointer;color:#0b0a09;background:var(--mostaza);border:0}
-.btn-add{font-size:15px;padding:.5em 1.4em;border-radius:999px;min-height:44px;transition:filter .2s}
+.btn-add{font-size:15px;padding:.5em 1.4em;border-radius:999px;min-height:44px;min-width:44px;transition:filter .2s}
 .btn-add:hover{filter:brightness(.88)}
 .qty{display:inline-flex;align-items:center;gap:12px}
 .qty button{width:44px;height:44px;border-radius:50%;font-size:1.5rem;line-height:1;padding:0 0 3px}
@@ -268,12 +268,17 @@ body:has(#cart-fab:not([hidden])) footer{padding-bottom:120px}
   .trust{font-size:11px;gap:12px}
   .hero-cta{padding:120px 16px 64px}
   .products{padding:64px 20px 16px}
-  .capas{left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 118px);flex-direction:row;flex-wrap:wrap;gap:6px 14px;justify-content:center}
+  .capas{left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 140px);flex-direction:row;flex-wrap:wrap;gap:6px 14px;justify-content:center}
   .capas li{font-size:13px;padding-left:16px}
   .cierre{bottom:calc(env(safe-area-inset-bottom,0px) + 28px)}
   .cierre__n{display:none}
   .cierre__p::before{content:"Gino Doble \00B7  "}
   .pics3{grid-template-columns:repeat(3,1fr);gap:8px}
+}
+
+@media (max-height:600px){
+  .hero-copy{top:40px}
+  .hero-copy h1{font-size:clamp(40px,8vh,80px)}
 }
 
 /* ---------- Menos movimiento ---------- */

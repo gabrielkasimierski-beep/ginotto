@@ -57,7 +57,10 @@ http.createServer((q,r)=>{
  const f=path.join(__dirname,p);
  if(!f.startsWith(__dirname+path.sep)||f.startsWith(DATA_DIR)){r.statusCode=403;return r.end('403')}
  fs.stat(f,(e,st)=>{if(e||!st.isFile()){r.statusCode=404;return r.end('404')}
-  r.setHeader('Content-Type',T[path.extname(f)]||'application/octet-stream');r.setHeader('Access-Control-Allow-Origin','*');r.setHeader('Cache-Control','no-cache');r.setHeader('Accept-Ranges','bytes');
+  const isMedia=/\.(webp|mp4|glb|png|jpg|svg)$/i.test(f);
+  r.setHeader('Content-Type',T[path.extname(f)]||'application/octet-stream');r.setHeader('Access-Control-Allow-Origin','*');
+  r.setHeader('Cache-Control',isMedia?'public, max-age=31536000, immutable':'no-cache');
+  r.setHeader('Accept-Ranges','bytes');
   // Range: el video del hero se recorre con el scroll (currentTime) y necesita pedir tramos
   const m=/^bytes=(\d*)-(\d*)$/.exec(q.headers.range||'');
   if(m&&(m[1]||m[2])){const a=m[1]?+m[1]:st.size-(+m[2]),b=m[1]&&m[2]?Math.min(+m[2],st.size-1):st.size-1;

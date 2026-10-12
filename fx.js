@@ -65,6 +65,12 @@
 
   const nav = document.querySelector('.nav');
   let target = 0, smooth = 0, appliedA = -1, appliedB = -1, ultimo = null, navSolido = false;
+  let trackHeight = 0, winHeight = 0;
+
+  function measure() {
+    trackHeight = track.offsetHeight;
+    winHeight = window.innerHeight;
+  }
 
   function readScroll() {
     const dA = a.duration, dB = (b && b.duration) ? b.duration : 0;
@@ -72,7 +78,7 @@
     // Rango útil = el recorrido menos la pantalla que ocupa el escenario fijo. La cadena termina al 85%: el 15% que
     // queda es la salida (B sostiene su último cuadro mientras la carta sube), sin scroll muerto.
     const SCRUB_END = 0.85;
-    const total = (track.offsetHeight - window.innerHeight) * SCRUB_END;
+    const total = (trackHeight - winHeight) * SCRUB_END;
     const prog = total > 0 ? topes(window.scrollY / total, 0, 1) : 0;
     target = prog * (dA + dB - 0.04);
   }
@@ -120,14 +126,17 @@
       if (b.style.opacity !== '1' && b.readyState >= 2) b.style.opacity = '1';
     }
     aCopy(dA && dB ? topes((smooth - dA) / dB, 0, 1) : 0);
+    // pre-cargar el segundo video cuando estemos cerca del final del primero
+    if (dA && b && b.preload !== 'auto' && smooth > dA * 0.7) { b.preload = 'auto'; }
     // pasado el hero, el menú gana un degradé oscuro para no pisar los títulos de la carta
-    const solido = window.scrollY > (track.offsetHeight - window.innerHeight) * 0.85 + 40;
+    const solido = window.scrollY > (trackHeight - winHeight) * 0.85 + 40;
     if (nav && solido !== navSolido) { navSolido = solido; nav.classList.toggle('solid', solido); }
     requestAnimationFrame(tick);
   }
 
   addEventListener('scroll', readScroll, { passive: true });
-  addEventListener('resize', readScroll, { passive: true });
+  addEventListener('resize', () => { measure(); readScroll(); }, { passive: true });
+  measure();
   readScroll();
   requestAnimationFrame(tick);
 })();

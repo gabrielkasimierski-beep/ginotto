@@ -12,3 +12,17 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# Motor Cliente nuevo (plantilla del cliente)
+.env
+.env.*
+!.env.example
+.claude/settings.json
+.claude/settings.local.json
+*.pem
+*.key
+
+# Taller local (no es parte del sitio)
+material-previo/
+herramientas-lab/
+.lab/

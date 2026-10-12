@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ginotto",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Claude/Clientes/ginotto/serve.js"],
+      "port": 8080
+    },
+    {
+      "name": "laboratorio",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Claude/Clientes/ginotto/herramientas-lab/laboratorio.mjs"],
+      "port": 8090
+    }
+  ]
+}

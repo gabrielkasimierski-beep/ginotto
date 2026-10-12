@@ -23,6 +23,10 @@
       const abrir = menu.hidden;
       menu.hidden = !abrir; burger.setAttribute('aria-expanded', String(abrir)); burger.setAttribute('aria-label', abrir ? 'Cerrar menú' : 'Abrir menú');
       document.body.style.overflow = abrir ? 'hidden' : '';
+      if (abrir) {
+        const primerLink = menu.querySelector('a');
+        if (primerLink) primerLink.focus();
+      }
     });
     menu.addEventListener('click', e => { if (e.target.closest('a')) cerrar(false); });
     document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target) && !burger.contains(e.target)) cerrar(false); });

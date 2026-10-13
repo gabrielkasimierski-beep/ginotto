@@ -20,34 +20,48 @@ a{color:inherit}
 h1{font-family:'Luckiest Guy',cursive;font-weight:400;margin:4px 0 18px;line-height:.95;font-size:clamp(2.6rem,10vw,5.2rem);text-transform:uppercase;color:var(--ink)}
 h1 span{display:block;color:var(--vio);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:5px 5px 0 var(--ora)}
 h1 em{display:block;font-style:normal;color:var(--ora);text-shadow:4px 4px 0 var(--ink);font-size:.8em}
-/* portada viva: clip de la burga con humo (vida/vida.js) */
-.hv{position:relative;height:100vh;height:100svh;min-height:560px;background:#0c0907;color:#fff;overflow:hidden;text-align:center}
-.hv-medio{position:absolute;inset:0;overflow:hidden}
-.hv-medio .vv,.hv-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.hv-poster{transition:opacity .6s}
-.hv-medio.clip-listo .hv-poster{opacity:0}
+/* portada: la burga en un clip enmarcado como las tarjetas de la carta (vida/vida.js reproduce el clip) */
+.hv{position:relative;min-height:100vh;min-height:100svh;padding:calc(env(safe-area-inset-top,0px) + 76px) 16px 74px;overflow:hidden;text-align:center;display:flex;align-items:center}
+.hv .splat{position:absolute;z-index:0}
+.hv .splat path{fill:var(--vio)}
+.hv .s1{width:380px;left:-190px;top:-150px;transform:rotate(20deg);opacity:.16}
+.hv .s2{width:330px;right:-150px;bottom:70px;opacity:.28}
+.hv .s2 path{fill:var(--ora)}
 .hv-barra{position:absolute;z-index:6;inset:0 0 auto 0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px}
-.hv-marca{display:flex;align-items:center;gap:.5rem;font-family:'Luckiest Guy',cursive;font-size:1.35rem;letter-spacing:.02em;text-decoration:none;color:#fff}
+.hv-marca{display:flex;align-items:center;gap:.5rem;font-family:'Luckiest Guy',cursive;font-size:1.35rem;letter-spacing:.02em;text-decoration:none;color:var(--vio)}
 .hv-marca img{width:44px;height:44px;border-radius:50%}
 .hv .hv-pedir{background:var(--ora);color:#fff;font-size:1.05rem;padding:.5em 1.1em;text-shadow:1px 1px 0 var(--ink)}
-.hv-texto{position:absolute;z-index:6;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 74px);padding:0 16px;pointer-events:none}
-.hv-texto h1{margin:0}
-.hv .kicker{color:#ffb066}
-.hv h1 span{color:#fff}
-.hv-cta{position:absolute;z-index:6;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);display:grid;justify-items:center;gap:.5rem}
-.hv-precio{margin:0;padding:.3em .9em;border-radius:12px;background:rgba(251,243,225,.96);color:var(--ink);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--vio);font-family:'Permanent Marker',cursive;font-size:1.15rem}
+.hv-grid{position:relative;z-index:2;width:100%;max-width:1100px;margin:0 auto;display:grid;gap:16px;grid-template-areas:"t" "m" "c"}
+.hv-texto{grid-area:t}
+.hv-texto h1{margin:0;font-size:clamp(2.5rem,10.4vw,4.4rem)}
+.hv-marco{grid-area:m;position:relative;margin:6px auto 4px;width:min(100%,430px);aspect-ratio:1/1;border:3px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 var(--vio);background:#EDDABF;transform:rotate(-1.4deg)}
+.hv-vid{position:absolute;inset:0;border-radius:23px;overflow:hidden}
+.hv-vid .vv,.hv-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hv-poster{transition:opacity .6s}
+.hv-vid.clip-listo .hv-poster{opacity:0}
+.sello{position:absolute;z-index:3;padding:.28em .75em;border-radius:12px;background:#FFF8E6;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ora);font-family:'Permanent Marker',cursive;font-size:clamp(.95rem,3.6vw,1.2rem);line-height:1.15;white-space:nowrap;animation:flota 5s ease-in-out infinite}
+.sello-1{left:-4%;top:9%;--r:-7deg;transform:rotate(var(--r))}
+.sello-2{right:-5%;top:46%;--r:5deg;transform:rotate(var(--r));animation-delay:-1.6s;box-shadow:3px 3px 0 var(--vio)}
+.sello-3{left:5%;bottom:-5%;--r:-3deg;transform:rotate(var(--r));animation-delay:-3.1s}
+@keyframes flota{50%{transform:translateY(-5px) rotate(var(--r))}}
+.hv-cta{grid-area:c;display:grid;justify-items:center;gap:.5rem;padding-top:10px}
+.hv-precio{margin:0;padding:.3em .9em;border-radius:12px;background:#FFF8E6;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--vio);font-family:'Permanent Marker',cursive;font-size:1.15rem}
 .hv-precio b{color:#A84A06;font-weight:400}
-.hv .fudo-link{margin:0;color:#e9dff5}
-.hv .fudo-link a{color:#fff}
-@media (min-aspect-ratio:1/1){
- .hv-medio{left:auto;right:clamp(1rem,6vw,7rem);width:min(calc(100svh * .747),46vw);
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
- .hv-barra{padding-inline:28px}
- .hv-texto,.hv-cta{left:clamp(1.5rem,6vw,5rem);right:auto;width:min(40vw,32rem);top:0;bottom:0;display:grid;align-content:center;justify-items:start;text-align:left;padding:0}
- .hv-texto h1{font-size:clamp(3rem,5.6vw,5.6rem)}
- .hv-texto .kicker{font-size:1.25rem}
- .hv-cta{align-content:end;padding-bottom:12vh}
+.hv-cinta{position:absolute;z-index:4;left:-3%;right:-3%;bottom:16px;transform:rotate(-1.3deg);background:var(--ora);border-block:3px solid var(--ink);overflow:hidden}
+.hv-cinta-pista{display:flex;width:max-content;animation:cinta 34s linear infinite;padding:.2em 0}
+.hv-cinta-pista span{font-family:'Luckiest Guy',cursive;font-size:1.2rem;letter-spacing:.04em;color:var(--vio);text-shadow:2px 2px 0 var(--ink);padding:0 .8rem;white-space:nowrap;text-transform:uppercase}
+@keyframes cinta{to{transform:translateX(-50%)}}
+@media (min-width:800px) and (min-aspect-ratio:1/1){
+ .hv{padding-bottom:90px}
+ .hv-grid{grid-template-columns:1fr minmax(320px,min(44vw,74svh));grid-template-areas:"t m" "c m";column-gap:clamp(28px,5vw,80px);align-items:center;text-align:left}
+ .hv-texto{align-self:end}
+ .hv-texto h1{font-size:clamp(2.8rem,5.3vw,4.9rem)}
+ .hv-cta{align-self:start;justify-items:start}
+ .hv-marco{width:100%;margin:0}
+ .hv-barra{padding-inline:clamp(1.5rem,5vw,4rem)}
+ .hv-cinta-pista span{font-size:1.4rem}
 }
+@media (prefers-reduced-motion:reduce){.sello,.hv-cinta-pista{animation:none}}
 .drip{height:46px;background:var(--vio);position:relative;z-index:2;
  -webkit-mask:radial-gradient(22px 30px at 22px 0,#000 98%,#0000) 0 0/44px 100%;mask:radial-gradient(22px 30px at 22px 0,#000 98%,#0000) 0 0/44px 100%}
 

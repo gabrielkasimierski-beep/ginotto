@@ -71,15 +71,20 @@ al hero viejo; la carta, la barra de categorías y todo el sistema de pedidos qu
 ## 8. Carta viva (13-oct-2026, rama `motor/carta-con-vida`)
 
 Decisión de Juanma: la portada y **cada plato de la carta** tienen que sentirse vivos, con la receta que
-funcionó con el vaso: partir de una imagen fotorrealista y sumarle efectos que se mueven. El 3D "de dibujo"
-(modelo generado) se descartó; el visor 3D/AR salió de la página.
+funcionó con el vaso: partir de una imagen fotorrealista y sumarle algo que se mueve. El 3D "de dibujo" (modelo
+generado) se descartó; el visor 3D/AR salió de la página. La portada tiene que ser **la misma página** que la
+carta (no un bloque oscuro aparte).
 
-| Dónde | Qué pasa | Cómo | Costo |
-|---|---|---|---|
-| Portada | Clip de 5 s de la Gino Doble (queso que chorrea, vapor) + humo en tiempo real | `assets/vida/hero.mp4` (350 KB) + shader | hecho |
-| Burgas / combos / veggie | Clip corto en bucle sobre fondo crema (queso fluyendo) | un clip de 3 s por plato (`CLIPS` en `vida/vida.js`) | 4,5 créditos c/u |
-| Platos sin clip todavía | Foto que se inclina y brilla con el puntero (táctil: brillo que pasa solo) | `inclinar()` | gratis |
-| Bebidas (6) | Vaso que suda: niebla, gotas, gas, espuma en la cola; se limpia con el mouse o un toque | `vasoVivo()` + imagen por bebida | 0,25 c/u (hecho) |
+| Dónde | Qué pasa | Cómo |
+|---|---|---|
+| Portada | La Gino Doble en un clip de 3 s enmarcado como una tarjeta de la carta (borde, sombra violeta), con stickers de la marca y una cinta que corre | `assets/vida/hero.mp4` (340 KB) + CSS `.hv-*` |
+| Burgas y veggie (8) | Clip de 3 s en bucle sobre fondo crema: queso que chorrea y vapor | `assets/vida/<id>.mp4` (~210 KB c/u), `CLIPS` en `vida/vida.js` |
+| Combos y acompañamientos | Foto que se inclina y brilla con el puntero (táctil: el brillo pasa solo) | `inclinar()` |
+| Bebidas (6) | Vaso que suda: niebla, gotas que resbalan, gas en hilos de perlitas, espuma en la cola; se limpia con el mouse o un toque | `vasoVivo()` + `assets/vida/bebida-*.webp` |
 
 Reglas: todo se apaga con "reducir movimiento"; nada toca `app.js`/`cart.js`/precios (vida.js se engancha a
-`.card[data-item]`); clips solo reproducen mientras están en pantalla.
+`.card[data-item]`); los clips se bajan y reproducen solo cuando el plato está por aparecer; un `<video>` por
+plato con fundido propio (sin corte en el bucle).
+
+Aprendido: el humo "de computadora" sobre fondo crema se ve como una mancha; lo que convence es el clip real.
+Un clip de 3 s 1:1 cuesta 4,5 créditos de Higgsfield (Kling 3.0 std, sin sonido).

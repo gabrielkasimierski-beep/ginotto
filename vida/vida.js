@@ -1,10 +1,10 @@
 /* Ginotto · carta viva
-   Humo para los platos calientes, vasos que sudan (con gas y espuma) para las bebidas y clips cortos en bucle.
+   Clips cortos en bucle para los platos, vasos que sudan (con gas y espuma) para las bebidas y un brillo táctil
+   para lo que todavía no tiene clip.
    Sin dependencias. No toca app.js ni cart.js: se engancha al HTML que ya genera la carta
    (.card[data-item] y .stage), así los pedidos, la disponibilidad y los precios siguen siendo los de siempre.
 
    Qué hace cada pieza:
-     - Humo: UN solo canvas WebGL para toda la página; dibuja volutas sobre los elementos que están a la vista.
      - Vaso: un canvas 2D por bebida (niebla, gotas que resbalan, gas, espuma). El mouse o un deslizamiento
        horizontal limpian el vidrio; un toque lanza una pasada de limpieza.
      - Clips: video muerto de 3–5 s en bucle con fundido (sin corte), solo mientras está en pantalla.
@@ -14,118 +14,38 @@ const quieta = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const celu = matchMedia("(max-width: 700px)").matches;
 const rnd = (a, b) => a + Math.random() * (b - a);
 
-/* ================= 1. HUMO ================= */
-
-const VS = `
-attribute vec2 aP; uniform vec4 uR; uniform vec2 uV; varying vec2 vUv;
-void main(){ vUv = aP; vec2 px = uR.xy + aP * uR.zw;
-  gl_Position = vec4(px.x / uV.x * 2.0 - 1.0, 1.0 - px.y / uV.y * 2.0, 0.0, 1.0); }`;
-
-const FS = `
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
-precision mediump float;
-#endif
-varying vec2 vUv; uniform float uT, uSeed, uPico; uniform vec3 uCol;
-float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-  return mix(mix(h(i), h(i + vec2(1.0, 0.0)), f.x), mix(h(i + vec2(0.0, 1.0)), h(i + vec2(1.0, 1.0)), f.x), f.y); }
-float fbm(vec2 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 4; i++) { s += a * n(p); p *= 2.03; a *= 0.5; } return s; }
-void main(){
-  vec2 uv = vec2(vUv.x, 1.0 - vUv.y);                 // y: 0 en la base, 1 arriba
-  float t = uT;
-  float w = (fbm(vec2(uv.y * 1.7 - t * 0.11, uSeed)) - 0.5) * 0.6 * uv.y;   // ondula más cuanto más sube
-  vec2 st = vec2((uv.x - 0.5 + w) * 1.5 + uSeed * 3.0, uv.y * 1.1 - t * 0.14);
-  float d = fbm(st * 2.4 + vec2(0.0, -t * 0.06)) * 0.75 + fbm(st * 5.0 + vec2(t * 0.03, -t * 0.1)) * 0.25;
-  float hum = smoothstep(0.46, 0.74, d);
-  float lado = smoothstep(0.0, 0.32, uv.x) * smoothstep(1.0, 0.68, uv.x);
-  float alto = smoothstep(0.0, 0.22, uv.y) * smoothstep(1.0, 0.28, uv.y);
-  float a = hum * lado * alto * uPico;
-  gl_FragColor = vec4(uCol * a, a);
-}`;
-
-function crearVapor() {
-  const canvas = document.createElement("canvas");
-  canvas.className = "vapor-capa"; canvas.setAttribute("aria-hidden", "true");
-  const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true, antialias: false, powerPreference: "low-power" });
-  if (!gl) return null;
-  const comp = (tipo, src) => { const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); return s; };
-  const prog = gl.createProgram();
-  gl.attachShader(prog, comp(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, comp(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
-  document.body.appendChild(canvas);
-  gl.useProgram(prog);
-  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
-  const aP = gl.getAttribLocation(prog, "aP"); gl.enableVertexAttribArray(aP); gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 0, 0);
-  const U = (n) => gl.getUniformLocation(prog, n);
-  const uR = U("uR"), uV = U("uV"), uT = U("uT"), uSeed = U("uSeed"), uPico = U("uPico"), uCol = U("uCol");
-  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-  const items = new Set();
-  let W = 0, H = 0; const dpr = Math.min(devicePixelRatio || 1, 1.5);
-  function tam() { W = innerWidth; H = innerHeight; canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); gl.viewport(0, 0, canvas.width, canvas.height); }
-  addEventListener("resize", tam); tam();
-  const io = new IntersectionObserver((es) => es.forEach((e) => { e.target.__vap.vis = e.isIntersecting; }), { rootMargin: "60px" });
-
-  // plan: [{ x, y, w, h, seed, pico }] en fracciones del rectángulo del elemento (y desde arriba)
-  function agregar(el, plan, col = [0.84, 0.8, 0.76]) {
-    const it = { el, vis: false, plan, col }; el.__vap = it; items.add(it); io.observe(el); return it;
-  }
-  const t0 = performance.now();
-  function dibujar(ahora) {
-    requestAnimationFrame(dibujar);
-    if (document.hidden) return;
-    gl.disable(gl.SCISSOR_TEST); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.enable(gl.SCISSOR_TEST);
-    gl.uniform2f(uV, W, H); gl.uniform1f(uT, (ahora - t0) / 1000);
-    for (const it of items) {
-      if (!it.vis) continue;
-      const r = it.el.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > H || r.width < 4 || r.height < 4) continue;
-      gl.scissor(Math.round(r.left * dpr), Math.round((H - r.bottom) * dpr), Math.round(r.width * dpr), Math.round(r.height * dpr));
-      gl.uniform3f(uCol, it.col[0], it.col[1], it.col[2]);
-      for (const p of it.plan) {
-        gl.uniform4f(uR, r.left + p.x * r.width, r.top + p.y * r.height, p.w * r.width, p.h * r.height);
-        gl.uniform1f(uSeed, p.seed); gl.uniform1f(uPico, p.pico);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      }
-    }
-  }
-  requestAnimationFrame(dibujar);
-  return { agregar };
-}
-
-// Tres volutas sobre la parte alta del plato (para una tarjeta cuadrada con la burga centrada)
-const planHeroe = () => [
-  { x: 0.2, y: 0.0, w: 0.46, h: 0.5, seed: 0.0, pico: 0.55 }, { x: 0.38, y: 0.0, w: 0.46, h: 0.5, seed: 0.4, pico: 0.5 },
-  { x: 0.3, y: -0.04, w: 0.5, h: 0.54, seed: 0.8, pico: 0.45 }, { x: 0.12, y: 0.03, w: 0.4, h: 0.46, seed: 1.2, pico: 0.4 },
-];
-
-/* ================= 2. CLIPS EN BUCLE CON FUNDIDO ================= */
+/* ================= 1. CLIPS EN BUCLE CON FUNDIDO ================= */
 
 function bucleSuave(contenedor, src, { fund = 0.7 } = {}) {
-  const mk = () => {
-    const v = document.createElement("video");
-    v.muted = true; v.loop = false; v.playsInline = true; v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true");
-    v.preload = "auto"; v.src = src; v.className = "vv"; v.style.opacity = 0; return v;
-  };
-  const a = mk(), b = mk(); contenedor.append(a, b);
-  let act = a, otra = b, fundiendo = false, tf = 0, activo = false, raf = 0;
+  // Un solo <video> por plato. Al reiniciar se congela el último cuadro en un canvas encima y se desvanece:
+  // el bucle no tiene corte y no se baja el clip dos veces ni se abren dos decodificadores.
+  const v = document.createElement("video");
+  v.muted = true; v.loop = false; v.playsInline = true; v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true");
+  v.preload = "none"; v.className = "vv";
+  const velo = document.createElement("canvas"); velo.className = "vv"; velo.setAttribute("aria-hidden", "true"); velo.style.opacity = 0; velo.style.pointerEvents = "none";
+  contenedor.append(v, velo);
+  const g = velo.getContext("2d");
+  let activo = false, raf = 0, pedido = false, fundiendo = false, tf = 0;
+  const listo = new Promise((ok) => { v.addEventListener("loadeddata", ok, { once: true }); v.addEventListener("error", ok, { once: true }); });
+  function pedir() { if (pedido) return; pedido = true; v.preload = "auto"; v.src = src; v.load(); }
   function tick(ahora) {
     raf = requestAnimationFrame(tick);
-    const d = act.duration || 0;
-    if (d && !fundiendo && act.currentTime > d - fund - 0.05) { otra.currentTime = 0; otra.play().catch(() => {}); otra.style.opacity = 0; fundiendo = true; tf = ahora; }
+    const d = v.duration || 0;
+    if (d && !fundiendo && v.currentTime > d - 0.12 && v.videoWidth) {
+      velo.width = v.videoWidth; velo.height = v.videoHeight; g.drawImage(v, 0, 0);
+      velo.style.opacity = 1; v.currentTime = 0; if (v.paused) v.play().catch(() => {});
+      fundiendo = true; tf = ahora;
+    }
     if (fundiendo) {
       const k = Math.min(1, (ahora - tf) / (fund * 1000));
-      otra.style.opacity = k;
-      if (k >= 1) { act.pause(); act.style.opacity = 0; const tmp = act; act = otra; otra = tmp; fundiendo = false; }
+      velo.style.opacity = String(1 - k);
+      if (k >= 1) fundiendo = false;
     }
   }
   return {
-    play() { if (activo) return; activo = true; act.style.opacity = 1; act.play().catch(() => {}); raf = requestAnimationFrame(tick); },
-    pause() { if (!activo) return; activo = false; cancelAnimationFrame(raf); a.pause(); b.pause(); },
-    listo: new Promise((ok) => { a.addEventListener("loadeddata", ok, { once: true }); a.addEventListener("error", ok, { once: true }); }),
+    play() { pedir(); if (activo) return; activo = true; v.play().catch(() => {}); raf = requestAnimationFrame(tick); },
+    pause() { if (!activo) return; activo = false; cancelAnimationFrame(raf); v.pause(); },
+    listo,
   };
 }
 
@@ -134,15 +54,15 @@ function vigilar(el, alEntrar, alSalir, margen = "120px") {
   io.observe(el);
 }
 
-/* ================= 3. VASO QUE SUDA ================= */
+/* ================= 2. VASO QUE SUDA ================= */
 
 // Forma del vidrio (fracciones de la imagen) y línea de la superficie, por bebida
 const VASOS = {
   "bebida-coca": { src: "assets/vida/bebida-cola.webp", gas: 1, espuma: true, sup: 0.2 },
   "bebida-coca-zero": { src: "assets/vida/bebida-cola-zero.webp", gas: 1, espuma: true, sup: 0.2 },
-  "bebida-sprite": { src: "assets/vida/bebida-lima.webp", gas: 1.3, sup: 0.2 },
-  "bebida-agua": { src: "assets/vida/bebida-agua.webp", gas: 0, sup: 0.2 },
-  "bebida-agua-gas": { src: "assets/vida/bebida-agua-gas.webp", gas: 1.6, sup: 0.2 },
+  "bebida-sprite": { src: "assets/vida/bebida-lima.webp", gas: 1.3, sup: 0.2, claro: true },
+  "bebida-agua": { src: "assets/vida/bebida-agua.webp", gas: 0, sup: 0.2, claro: true },
+  "bebida-agua-gas": { src: "assets/vida/bebida-agua-gas.webp", gas: 1.6, sup: 0.2, claro: true },
   "bebida-cerveza": { src: "assets/vida/bebida-cerveza.webp", gas: 0.8, sup: 0.27, topeVidrio: 0.07 },
 };
 
@@ -195,24 +115,42 @@ function vasoVivo(host, img, cfg) {
     g.globalCompositeOperation = "destination-in"; g.drawImage(sil, 0, 0);
   }
 
-  // gas: hilos de burbujas que suben y revientan en la superficie
+  // gas: burbujas diminutas que nacen en pocos puntos, suben en hilos, crecen y se aceleran, y revientan arriba.
+  // Se dibujan con un sprite (disco suave con borde brillante y un reflejo) sumado a la luz, no como círculos de contorno.
   const SUP = H * cfg.sup;
-  const hilos = cfg.gas ? Array.from({ length: Math.round((celu ? 7 : 10) * cfg.gas) }, () => ({ x: rnd(0.36, 0.64), tasa: rnd(3, 8) * Math.min(1.4, cfg.gas), acum: Math.random() })) : [];
-  const burbujas = [], chispas = [];
-  const interior = (y) => { const t = Math.max(0, (y - H * yT) / (H * (yB - yT))); return [x0 + (xb0 - x0) * t + 0.03, x1 + (xb1 - x1) * t - 0.03]; };
-  function emitir(h) {
-    const y = H * rnd(0.82, 0.89), [a, b] = interior(y);
-    burbujas.push({ x: W * Math.max(a, Math.min(b, h.x + rnd(-0.02, 0.02))), y, r: rnd(2.2, 5) * k, vy: rnd(80, 160) * H / 1168, fase: rnd(0, 7), amp: rnd(1, 3.2) * k, f: rnd(2, 5), a: rnd(0.55, 0.95) });
+  const interior = (y) => { const t = Math.max(0, (y - H * yT) / (H * (yB - yT))); return [x0 + (xb0 - x0) * t + 0.025, x1 + (xb1 - x1) * t - 0.025]; };
+  const sprite = (claro) => {
+    const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
+    const r = g.createRadialGradient(32, 32, 0, 32, 32, 30);
+    if (claro) { r.addColorStop(0, "rgba(255,255,255,.35)"); r.addColorStop(0.7, "rgba(255,255,255,.55)"); r.addColorStop(0.9, "rgba(60,70,80,.55)"); r.addColorStop(1, "rgba(60,70,80,0)"); }
+    else { r.addColorStop(0, "rgba(255,244,225,.10)"); r.addColorStop(0.62, "rgba(255,244,225,.22)"); r.addColorStop(0.86, "rgba(255,248,235,.85)"); r.addColorStop(1, "rgba(255,248,235,0)"); }
+    g.fillStyle = r; g.beginPath(); g.arc(32, 32, 30, 0, 7); g.fill();
+    g.fillStyle = "rgba(255,255,255,.95)"; g.beginPath(); g.ellipse(23, 21, 6, 4, -0.6, 0, 7); g.fill();
+    if (claro) { g.fillStyle = "rgba(40,50,60,.35)"; g.beginPath(); g.ellipse(40, 42, 8, 5, -0.6, 0, 7); g.fill(); }
+    return c;
+  };
+  const spr = sprite(!!cfg.claro);
+  const NH = Math.round((celu ? 7 : 10) * Math.min(1.5, cfg.gas || 0));
+  const bases = [0.375, 0.415, 0.46, 0.5, 0.54, 0.585, 0.625, 0.4, 0.57, 0.48];
+  const hilos = cfg.gas ? Array.from({ length: NH }, (_, i) => ({ x: bases[i % bases.length] + rnd(-0.012, 0.012), tasa: rnd(8, 15) * Math.min(1.3, cfg.gas), acum: Math.random() })) : [];
+  const burbujas = [], chispas = [], pegadas = [];
+  function emitir(h, micro = false) {
+    const y = H * yB - rnd(6, 26) * k, [a, b] = interior(y);
+    burbujas.push({ x: W * Math.max(a, Math.min(b, h.x)) + rnd(-1.2, 1.2) * k, y, x0: 0, edad: 0,
+      r: (micro ? rnd(0.7, 1.1) : rnd(1.2, 2.0)) * k, gr: (micro ? rnd(0.15, 0.3) : rnd(0.5, 1.0)) * k,
+      fase: rnd(0, 7), f: rnd(3, 7), amp: rnd(0.3, 0.9) * k, a: micro ? rnd(0.25, 0.5) : rnd(0.6, 1), micro });
+  }
+  // burbujas pegadas al vidrio: crecen de a poco y de tanto en tanto una se suelta
+  for (let i = 0; cfg.gas && i < (celu ? 14 : 22); i++) {
+    const y = H * rnd(0.3, 0.86), [a, b] = interior(y), lado = Math.random() < 0.5;
+    pegadas.push({ x: W * (lado ? a + rnd(0, 0.03) : b - rnd(0, 0.03)), y, r: rnd(1.4, 3.0) * k, tope: rnd(3.4, 4.4) * k, a: rnd(0.55, 0.95) });
   }
   function dibujarGas(g, mult) {
-    g.save();
-    for (const b of burbujas) {
-      const rr = b.r * (1 + 0.3 * (1 - (b.y - SUP) / (H * 0.7)));
-      g.globalAlpha = b.a * mult; g.lineWidth = Math.max(1, rr * 0.3); g.strokeStyle = "rgba(255,246,222,.95)"; g.fillStyle = "rgba(255,255,255,.16)";
-      g.beginPath(); g.arc(b.x, b.y, rr, 0, 7); g.fill(); g.stroke();
-      g.fillStyle = "rgba(255,255,255,.98)"; g.beginPath(); g.arc(b.x - rr * 0.35, b.y - rr * 0.38, Math.max(0.8, rr * 0.28), 0, 7); g.fill();
-    }
-    for (const c of chispas) { g.globalAlpha = Math.max(0, c.vida * 1.8) * Math.min(1, mult + 0.3); g.fillStyle = "rgba(255,248,230,.95)"; g.beginPath(); g.arc(c.x, c.y, c.r, 0, 7); g.fill(); }
+    g.save(); g.globalCompositeOperation = cfg.claro ? "source-over" : "lighter";
+    for (const b of burbujas) { const d = b.r * 2.6; g.globalAlpha = b.a * mult; g.drawImage(spr, b.x - d / 2, b.y - d / 2, d, d); }
+    for (const b of pegadas) { const d = b.r * 2.6; g.globalAlpha = b.a * mult; g.drawImage(spr, b.x - d / 2, b.y - d / 2, d, d); }
+    g.globalCompositeOperation = "lighter";
+    for (const c of chispas) { g.globalAlpha = Math.max(0, c.vida * 2) * Math.min(1, mult + 0.2); g.fillStyle = "rgba(255,248,230,.95)"; g.beginPath(); g.arc(c.x, c.y, c.r, 0, 7); g.fill(); }
     g.restore();
   }
 
@@ -250,13 +188,29 @@ function vasoVivo(host, img, cfg) {
       else { d.v = Math.min(H * 0.11, d.v + H * 0.5 * dt); d.y += d.v * dt; if (Math.random() < 0.012) { d.espera = rnd(0.3, 1.5); d.v = 0; } }
       if (d.y > H * yB - 10) { Object.assign(d, nuevaGota(true)); d.py = d.y; } else if (d.y > d.py) limpiar(d.x, d.py, d.x, d.y, d.r * 1.15, 0.45);
     }
-    for (const h of hilos) { h.acum += h.tasa * dt; while (h.acum >= 1) { h.acum -= 1; emitir(h); } }
+    for (const h of hilos) {
+      h.acum += h.tasa * dt * rnd(0.6, 1.4);
+      while (h.acum >= 1) { h.acum -= 1; emitir(h); emitir(h, true); }
+    }
     for (let i = burbujas.length - 1; i >= 0; i--) {
       const b = burbujas[i];
-      b.y -= b.vy * dt * (1 + (H * 0.9 - b.y) / H * 0.8); b.fase += b.f * dt; b.x += Math.sin(b.fase) * b.amp * dt;
-      if (b.y < SUP) { if (Math.random() < 0.5) for (let j = 0; j < 3; j++) chispas.push({ x: b.x, y: SUP, vx: rnd(-26, 26) * k, vy: -rnd(40, 90) * k, r: rnd(0.8, 1.6) * k, vida: rnd(0.25, 0.5) }); burbujas.splice(i, 1); }
+      b.edad += dt; b.r = Math.min(b.r + b.gr * dt, (b.micro ? 1.7 : 4.4) * k);
+      const rk = b.r / k, v = (b.micro ? 60 : 85) + (b.micro ? 40 : 95) * rk;     // más grandes, más rápidas
+      b.y -= v * dt * (H / 720); b.fase += b.f * dt; b.x += Math.sin(b.fase) * b.amp * dt * 6;
+      if (b.y < SUP) {
+        if (!b.micro && Math.random() < 0.4) for (let j = 0; j < 2; j++) chispas.push({ x: b.x, y: SUP, vx: rnd(-18, 18) * k, vy: -rnd(30, 70) * k, r: rnd(0.5, 1.1) * k, vida: rnd(0.2, 0.4) });
+        burbujas.splice(i, 1);
+      }
     }
-    for (let i = chispas.length - 1; i >= 0; i--) { const c = chispas[i]; c.vida -= dt; c.vy += 260 * k * dt; c.x += c.vx * dt; c.y += c.vy * dt; if (c.vida <= 0) chispas.splice(i, 1); }
+    for (const p of pegadas) {
+      p.r += dt * 0.18 * k;
+      if (p.r > p.tope) {                       // se suelta y vuelve a nacer más abajo, pegada a la pared
+        burbujas.push({ x: p.x, y: p.y, edad: 0, r: p.r, gr: rnd(0.2, 0.4) * k, fase: rnd(0, 7), f: rnd(3, 6), amp: rnd(0.3, 0.7) * k, a: p.a, micro: false });
+        const y = H * rnd(0.3, 0.86), [a2, b2] = interior(y), lado = Math.random() < 0.5;
+        p.x = W * (lado ? a2 + rnd(0, 0.03) : b2 - rnd(0, 0.03)); p.y = y; p.r = rnd(1.0, 1.6) * k;
+      }
+    }
+    for (let i = chispas.length - 1; i >= 0; i--) { const c = chispas[i]; c.vida -= dt; c.vy += 220 * k * dt; c.x += c.vx * dt; c.y += c.vy * dt; if (c.vida <= 0) chispas.splice(i, 1); }
     if (barrido) { // pasada de limpieza en zigzag
       barrido.t += dt * 1.6; const p = Math.min(1, barrido.t), fila = Math.floor(p * 5), f = (p * 5) % 1;
       const y = H * (0.28 + fila * 0.12), xa = W * (fila % 2 ? 0.66 : 0.34), xb = W * (fila % 2 ? 0.34 : 0.66);
@@ -279,10 +233,17 @@ function vasoVivo(host, img, cfg) {
   return { canvas, play() { if (!activo) { activo = true; t0 = performance.now(); raf = requestAnimationFrame(cuadro); } }, pause() { activo = false; cancelAnimationFrame(raf); } };
 }
 
-/* ================= 4. ARMADO ================= */
+/* ================= 3. ARMADO ================= */
 
-const CLIPS = {                      // id del plato → clip corto (se suman a medida que se generan)
+const CLIPS = {                      // id del plato → clip de 3 s (assets/vida/<id>.mp4)
+  "cheeseburger-simple": "assets/vida/cheeseburger-simple.mp4",
+  "cheeseburger-doble": "assets/vida/cheeseburger-doble.mp4",
+  "gino-simple": "assets/vida/gino-simple.mp4",
   "gino-doble": "assets/vida/gino-doble.mp4",
+  "otto-simple": "assets/vida/otto-simple.mp4",
+  "otto-doble": "assets/vida/otto-doble.mp4",
+  "otto-veggie": "assets/vida/otto-veggie.mp4",
+  "cheese-veggie": "assets/vida/cheese-veggie.mp4",
 };
 
 function cargarImagen(src, alt) {
@@ -306,8 +267,6 @@ function inclinar(stage) {
 
 function iniciar() {
   if (quieta) return;                // con "reducir movimiento" quedan las fotos tal cual
-  const vapor = crearVapor();
-
   // Platos calientes: humo sobre la foto (y clip en bucle si hay)
   const tarjetas = [...document.querySelectorAll("#grid-burgas .card, #grid-veggie .card, #carousel .card")];
   for (const card of tarjetas) {
@@ -335,13 +294,12 @@ function iniciar() {
     }).catch(() => {});
   }
 
-  // Portada: clip de la burga con humo
+  // Portada: clip de la Gino Doble enmarcado
   const hero = document.querySelector("[data-hero-video]");
   if (hero) {
     const b = bucleSuave(hero, hero.dataset.heroVideo, { fund: 0.8 });
     b.listo.then(() => hero.classList.add("clip-listo"));
     vigilar(hero, () => b.play(), () => b.pause(), "0px");
-    if (vapor) vapor.agregar(hero, planHeroe(), [1, 0.985, 0.95]);
   }
   window.__vida = true;
 }

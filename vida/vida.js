@@ -282,6 +282,18 @@ function iniciar() {
     }
   }
 
+  // Acompañamientos (papas, aros, nuggets): son fotos sueltas, no tarjetas; si hay clip, la foto se envuelve y se reproduce
+  document.querySelectorAll(".pics3 .pic").forEach((img) => {
+    const clave = (img.getAttribute("src") || "").split("/").pop().replace(/-cream\.webp$/, "");
+    if (!CLIPS[clave]) return;
+    const caja = document.createElement("div");
+    caja.className = "pic pic-clip stage";   // .stage: mismo comportamiento de clip que en las tarjetas
+    img.replaceWith(caja); img.className = "pic-in"; caja.append(img);
+    const bucle = bucleSuave(caja, CLIPS[clave]);
+    bucle.listo.then(() => caja.classList.add("clip-listo"));
+    vigilar(caja, () => bucle.play(), () => bucle.pause());
+  });
+
   // Bebidas: vaso vivo
   for (const card of document.querySelectorAll("#grid-bebidas .card")) {
     const cfg = VASOS[card.dataset.item]; const stage = card.querySelector(".stage"); if (!cfg || !stage) continue;

@@ -22,3 +22,8 @@
 }
 @keyframes pasa { 0%, 70% { background-position: 140% 0; } 100% { background-position: -40% 0; } }
 @media (prefers-reduced-motion: reduce) { .stage .brillo { display: none; } }
+
+/* acompañamientos con clip: la caja hereda borde y sombra de .pic; la foto y el clip la llenan */
+.pic-clip { position: relative; overflow: hidden; aspect-ratio: 1 / 1; height: auto; }
+.pic-clip .pic-in { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.pic-clip .vv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }

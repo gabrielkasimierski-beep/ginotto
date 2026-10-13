@@ -12,6 +12,9 @@
 
 const quieta = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const celu = matchMedia("(max-width: 700px)").matches;
+// Ahorro de datos o conexión 2G: no se bajan clips (quedan las fotos, que ya cargan solas). El vaso sigue: es liviano.
+const conexion = navigator.connection || {};
+const ahorro = !!conexion.saveData || /(^|-)2g$/.test(conexion.effectiveType || "");
 const rnd = (a, b) => a + Math.random() * (b - a);
 
 /* ================= 1. CLIPS EN BUCLE CON FUNDIDO ================= */
@@ -235,7 +238,7 @@ function vasoVivo(host, img, cfg) {
 
 /* ================= 3. ARMADO ================= */
 
-const CLIPS = {                      // id del plato → clip de 3 s (assets/vida/<id>.mp4)
+const CLIPS = {                      // id del plato → clip corto en bucle (assets/vida/<id>.mp4, ~200 KB)
   "cheeseburger-simple": "assets/vida/cheeseburger-simple.mp4",
   "cheeseburger-doble": "assets/vida/cheeseburger-doble.mp4",
   "gino-simple": "assets/vida/gino-simple.mp4",
@@ -274,7 +277,7 @@ function iniciar() {
   for (const card of tarjetas) {
     const stage = card.querySelector(".stage"); if (!stage) continue;
     const id = card.dataset.item;
-    if (CLIPS[id]) {
+    if (CLIPS[id] && !ahorro) {
       const bucle = bucleSuave(stage, CLIPS[id]);
       stage.classList.add("con-clip");
       bucle.listo.then(() => stage.classList.add("clip-listo"));
@@ -287,7 +290,7 @@ function iniciar() {
   // Acompañamientos (papas, aros, nuggets): son fotos sueltas, no tarjetas; si hay clip, la foto se envuelve y se reproduce
   document.querySelectorAll(".pics3 .pic").forEach((img) => {
     const clave = (img.getAttribute("src") || "").split("/").pop().replace(/-cream\.webp$/, "");
-    if (!CLIPS[clave]) return;
+    if (!CLIPS[clave] || ahorro) return;
     const caja = document.createElement("div");
     caja.className = "pic pic-clip stage";   // .stage: mismo comportamiento de clip que en las tarjetas
     img.replaceWith(caja); img.className = "pic-in"; caja.append(img);
@@ -310,7 +313,7 @@ function iniciar() {
 
   // Portada: clip de la Gino Doble enmarcado
   const hero = document.querySelector("[data-hero-video]");
-  if (hero) {
+  if (hero && !ahorro) {
     const b = bucleSuave(hero, hero.dataset.heroVideo, { fund: 0.8 });
     b.listo.then(() => hero.classList.add("clip-listo"));
     vigilar(hero, () => b.play(), () => b.pause(), "0px");

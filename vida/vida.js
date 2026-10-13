@@ -254,6 +254,7 @@ const CLIPS = {                      // id del plato → clip corto en bucle (as
   "combo-gino-simple": "assets/vida/combo-gino-simple.mp4",
   "aros": "assets/vida/aros.mp4",
   "nuggets": "assets/vida/nuggets.mp4",
+  "combo-cheeseburger-doble": "assets/vida/combo-cheeseburger-doble.mp4",
 };
 
 function cargarImagen(src, alt) {

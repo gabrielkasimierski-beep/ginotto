@@ -8,8 +8,8 @@
 >   todas las imágenes con `width`/`height` y `alt`, foco visible.
 > - ✅ Pedido de punta a punta (agregar → "Ver pedido" con total).
 > - ⚠️ Peso recorriendo toda la carta: ≈ 4,7 MB (imágenes ≈ 2,6 MB + clips ≈ 2,0 MB). Los clips y las fotos
->   se piden recién al acercarse; la portada sola pesa mucho menos. Cada clip ≈ 200 KB; solo `hero.mp4` (339 KB)
->   pasa los 300 KB.
+>   se piden recién al acercarse; la portada sola pesa mucho menos. Cada clip ≈ 150–240 KB; `hero.mp4` se
+>   recomprimió de 339 a 273 KB (13-oct, crf 28, igual a la vista). Ya ninguno pasa los 300 KB.
 > - ⚠️ Texto < 16 px: los 3 sellos de la portada (15,2 px, decorativos), un enlace y la letra legal del pie.
 > - ❌ Sin `og:image` / `og:url` / `sitemap.xml` hasta tener el dominio real (sigue pendiente).
 > - Sigue pendiente de arriba: honeypot del formulario, aviso de privacidad, analítica, contraste naranja/blanco 2,8:1,

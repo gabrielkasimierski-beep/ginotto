@@ -244,6 +244,8 @@ const CLIPS = {                      // id del plato → clip de 3 s (assets/vid
   "otto-doble": "assets/vida/otto-doble.mp4",
   "otto-veggie": "assets/vida/otto-veggie.mp4",
   "cheese-veggie": "assets/vida/cheese-veggie.mp4",
+  "combo-gino-doble": "assets/vida/combo-gino-doble.mp4",
+  "papas": "assets/vida/papas.mp4",
 };
 
 function cargarImagen(src, alt) {

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ginotto — Pruebas de efectos</title>
+<link rel="icon" href="../assets/logo.webp" type="image/webp">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700&family=Luckiest+Guy&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root { --vio:#4B2E83; --ora:#F2791E; --ink:#1d1428; --papel:#F6EBD3; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--papel); color: var(--ink); font: 500 17px/1.45 'Barlow', system-ui, sans-serif; padding: 28px 18px 60px; }
+  main { max-width: 980px; margin: 0 auto; }
+  h1 { font-family: 'Luckiest Guy', cursive; font-weight: 400; color: var(--vio); font-size: clamp(2.2rem, 7vw, 3.6rem); margin: 0 0 .2rem; text-shadow: 3px 3px 0 var(--ora); }
+  .sub { font-family: 'Permanent Marker', cursive; color: #5b4a6b; margin: 0 0 1.6rem; }
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  a.card { display: block; background: #fff; border: 3px solid var(--ink); border-radius: 20px; box-shadow: 6px 6px 0 var(--vio); padding: 18px 18px 20px; color: inherit; text-decoration: none; transition: transform .12s, box-shadow .12s; }
+  a.card:hover { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--vio); }
+  .n { font-family: 'Luckiest Guy', cursive; color: var(--ora); font-size: 1.1rem; }
+  h2 { font-family: 'Luckiest Guy', cursive; font-weight: 400; font-size: 1.6rem; margin: .1rem 0 .4rem; }
+  p { margin: .3rem 0; }
+  .ver { font-family: 'Permanent Marker', cursive; color: var(--vio); }
+  .estado { margin-top: .7rem; font-size: .9rem; color: #5b4a6b; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Pruebas de efectos</h1>
+  <p class="sub">Para mirar, tocar y decir cuál va. Todo es de prueba.</p>
+  <div class="grid">
+    <a class="card" href="burga-3d/">
+      <span class="n">1</span>
+      <h2>La burga en 3D</h2>
+      <p>Una Gino Doble real en 3D, con humo que sube y una cámara que se mueve cuando bajás.</p>
+      <p class="ver">Qué mirar: bajá despacio, y probá el botón Noche / Crema.</p>
+      <p class="estado">Estado: funciona. Modelo 3D generado con IA (720 KB, ~114 mil triángulos). Con ?modelo=viejo se ve el anterior, para comparar.</p>
+    </a>
+    <a class="card" href="vaso/">
+      <span class="n">2</span>
+      <h2>El vaso que suda</h2>
+      <p>Vaso frío empañado con gotas que resbalan. Pasás el mouse o el dedo y se limpia, y aparece la jirafa.</p>
+      <p class="ver">Qué mirar: limpiá el vidrio y esperá: se vuelve a empañar.</p>
+      <p class="estado">Estado: funciona; imagen generada con IA.</p>
+    </a>
+    <a class="card" href="../">
+      <span class="n">0</span>
+      <h2>La portada anterior</h2>
+      <p>La película que se arma y se desarma con el scroll sobre papel crema (la que no te convenció).</p>
+      <p class="ver">Para comparar.</p>
+    </a>
+  </div>
+</main>
+</body>
+</html>

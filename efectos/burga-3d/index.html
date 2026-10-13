@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ginotto — Prueba: la Gino Doble en 3D de verdad</title>
+<meta name="theme-color" content="#160c2b">
+<link rel="icon" href="../../assets/logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700&family=Luckiest+Guy&family=Permanent+Marker&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+}}
+</script>
+<style>
+  :root { --vio:#4B2E83; --ora:#F2791E; --cream:#F6EBD3; --ink:#1d1428; }
+  *,*::before,*::after { box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body { margin: 0; background: #160c2b; color: #fff; font: 500 17px/1.4 'Barlow', system-ui, sans-serif; overflow-x: clip; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Fondo: noche violeta de la marca (por defecto) o papel crema */
+  .escena { --fondo-centro: #3a1f6e; --fondo-borde: #120a1f; --texto: #fff; --acento-txt: #ffb066;
+    background: radial-gradient(70% 60% at 50% 46%, var(--fondo-centro) 0%, #24123f 45%, var(--fondo-borde) 100%); transition: background .6s; }
+  [data-fondo="crema"] .escena { --fondo-centro: #FBF3E1; --fondo-borde: #E9D9B6; --texto: var(--ink); --acento-txt: #A84A06;
+    background: radial-gradient(70% 60% at 50% 46%, #FBF3E1 0%, #F6EBD3 55%, #E9D9B6 100%); }
+  .spray { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .spray i { position: absolute; border-radius: 50%; filter: blur(46px); opacity: .55; }
+  .spray .a { width: 46vmax; height: 46vmax; left: -14vmax; top: -10vmax; background: var(--vio); }
+  .spray .b { width: 38vmax; height: 38vmax; right: -12vmax; bottom: -12vmax; background: var(--ora); opacity: .5; }
+  [data-fondo="crema"] .spray i { opacity: .35; }
+  .grano { position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .4  0 0 0 0 .3  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+
+  .peli-pista { --largo: 480vh; }
+  .escena { color: var(--texto); }
+  #c3d, .poster { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .poster { object-fit: contain; padding: 14vh 8vw; transition: opacity .6s; }
+  .poster.fuera { opacity: 0; pointer-events: none; }
+
+  .barra { position: absolute; z-index: 8; inset: 0 0 auto 0; display: flex; align-items: center; justify-content: space-between; padding: calc(env(safe-area-inset-top, 0px) + 10px) 18px 10px; }
+  .marca { display: flex; align-items: center; gap: .5rem; font-family: 'Luckiest Guy', cursive; font-size: 1.35rem; letter-spacing: .02em; color: #fff; }
+  [data-fondo="crema"] .marca { color: var(--vio); }
+  .marca img { width: 44px; height: 44px; border-radius: 50%; }
+  .btn { display: inline-block; font-family: 'Luckiest Guy', cursive; letter-spacing: .04em; padding: .6em 1.3em; border-radius: 14px; border: 3px solid var(--ink);
+    background: var(--ora); color: #fff; text-shadow: 2px 2px 0 var(--ink); box-shadow: 4px 4px 0 var(--ink); font-size: 1.1rem; transition: transform .12s, box-shadow .12s; }
+  .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+  .btn-big { font-size: 1.6rem; padding: .55em 1.5em; }
+
+  .titulo { position: absolute; z-index: 5; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 76px); text-align: center; padding: 0 16px; pointer-events: none; }
+  .kicker { font-family: 'Permanent Marker', cursive; color: var(--acento-txt); font-size: 1.15rem; margin: 0 0 .3rem; }
+  h1 { font-family: 'Luckiest Guy', cursive; font-weight: 400; margin: 0; line-height: .95; font-size: clamp(2.4rem, 10vw, 5rem); text-transform: uppercase; }
+  h1 span { display: block; color: #fff; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 5px 5px 0 var(--ora); }
+  [data-fondo="crema"] h1 span { color: var(--vio); }
+  h1 em { display: block; font-style: normal; color: var(--ora); text-shadow: 4px 4px 0 var(--ink); font-size: .8em; }
+
+  .caps { position: absolute; z-index: 6; left: 16px; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); display: grid; justify-items: center; pointer-events: none; }
+  .cap { grid-area: 1/1; margin: 0; opacity: 0; transform: translateY(10px); padding: .5em 1.1em; border-radius: 14px; background: rgba(251,243,225,.96);
+    border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ora); font-family: 'Permanent Marker', cursive; color: var(--ink); font-size: clamp(1.05rem, 4.2vw, 1.4rem); text-align: center; }
+  .cap b { color: #A84A06; font-weight: 400; }
+
+  .cierre { position: absolute; z-index: 7; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); display: grid; justify-items: center; gap: .55rem;
+    opacity: 0; visibility: hidden; transform: translateY(14px); }
+  .cierre .precio { margin: 0; padding: .3em .9em; border-radius: 12px; background: rgba(251,243,225,.96); color: var(--ink); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--vio); font-family: 'Permanent Marker', cursive; font-size: 1.15rem; }
+  .cierre .precio b { color: #A84A06; font-weight: 400; }
+
+  .carga { position: absolute; z-index: 9; left: 0; right: 0; top: 0; height: 4px; }
+  .carga i { display: block; height: 100%; background: var(--ora); transform-origin: 0 50%; transform: scaleX(0); transition: opacity .4s; }
+
+  .ayuda { position: absolute; z-index: 6; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); text-align: center; font-family: 'Permanent Marker', cursive; opacity: .85; transition: opacity .4s; pointer-events: none; }
+
+  /* Selector de fondo (solo para esta prueba) */
+  .selector { position: fixed; z-index: 30; right: 12px; bottom: 12px; display: flex; gap: 6px; padding: 6px; border-radius: 99px; background: rgba(20,12,35,.8); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2); }
+  .selector button { font: 700 .85rem 'Barlow', sans-serif; padding: .5em 1em; border-radius: 99px; border: 0; background: transparent; color: #fff; cursor: pointer; }
+  .selector button[aria-pressed="true"] { background: var(--ora); }
+
+  @media (max-width: 700px) { .caps, .cierre { bottom: calc(env(safe-area-inset-bottom, 0px) + 70px); } .ayuda { bottom: calc(env(safe-area-inset-bottom, 0px) + 74px); } }
+  /* Escritorio apaisado: el título pasa a la izquierda y el plato queda a la derecha */
+  @media (min-aspect-ratio: 1/1) {
+    .titulo, .caps, .cierre { left: clamp(1.5rem, 6vw, 5rem); right: auto; width: min(40vw, 32rem); text-align: left; justify-items: start; top: 0; bottom: 0; display: grid; align-content: center; padding: 0; }
+    .titulo h1 { font-size: clamp(3rem, 5.6vw, 5.6rem); }
+    .ayuda { left: clamp(1.5rem, 6vw, 5rem); right: auto; text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) { .peli-pista { --largo: 100svh; } .caps { display: none; } .cierre { opacity: 1; visibility: visible; transform: none; } }
+</style>
+</head>
+<body data-fondo="noche">
+
+<section class="peli-pista" data-escenario>
+  <div class="escena" data-escena>
+    <div class="spray" aria-hidden="true"><i class="a"></i><i class="b"></i></div>
+    <canvas id="c3d" aria-hidden="true"></canvas>
+    <img class="poster" id="poster" src="../../assets/gino-doble-cream.webp" alt="Gino Doble: doble carne, cheddar y bacon" width="1024" height="1024">
+    <div class="grano" aria-hidden="true"></div>
+
+    <div class="barra">
+      <a class="marca" href="../../index.html" aria-label="Ginotto Burger"><img src="../../assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
+      <a class="btn" href="../../index.html#carta">Pedir</a>
+    </div>
+
+    <div class="titulo" id="titulo">
+      <p class="kicker">Hamburguesería · Villa Urquiza</p>
+      <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
+    </div>
+    <p class="ayuda" id="ayuda">Bajá y mirala por todos lados ↓</p>
+
+    <div class="caps" aria-hidden="true">
+      <p class="cap"><b>Doble</b> carne smash</p>
+      <p class="cap"><b>Cheddar</b> y bacon Sugardale</p>
+      <p class="cap"><b>Aderezo</b> Gino</p>
+    </div>
+
+    <div class="cierre" id="cierre">
+      <p class="precio"><b>Gino Doble</b> · $18.000</p>
+      <a class="btn btn-big" href="../../index.html#carta">Pedir ahora</a>
+    </div>
+
+    <div class="carga" aria-hidden="true"><i id="carga"></i></div>
+  </div>
+</section>
+
+<div class="selector" role="group" aria-label="Fondo (solo para esta prueba)">
+  <button type="button" data-f="noche" aria-pressed="true">Noche</button>
+  <button type="button" data-f="crema" aria-pressed="false">Crema</button>
+</div>
+
+<script type="module">
+  import * as THREE from "three";
+  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+  import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+  import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+  import { escenario, capitulos, reducido } from "../../kit/motor-scroll.js";
+
+  const $ = (s) => document.querySelector(s);
+  const canvas = $("#c3d"), poster = $("#poster"), carga = $("#carga");
+  const titulo = $("#titulo"), cierre = $("#cierre"), ayuda = $("#ayuda");
+  const caps = [...document.querySelectorAll(".cap")];
+  const quieta = reducido();
+  const celu = matchMedia("(max-width: 700px)").matches;
+  const apaisado = matchMedia("(min-aspect-ratio: 1/1)").matches;
+
+  // ---- fondo noche / crema ----
+  let fondo = "noche";
+  const pintarSelector = () => document.querySelectorAll(".selector button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === fondo)));
+  document.querySelectorAll(".selector button").forEach(b => b.onclick = () => { fondo = b.dataset.f; document.body.dataset.fondo = fondo; pintarSelector(); aplicarVapor(); });
+
+  // ---- escena ----
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, celu ? 1.5 : 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 0.55;
+
+  const camara = new THREE.PerspectiveCamera(28, 1, 0.1, 60);
+
+  // Luz de estudio con los colores de la marca: principal cálida, contraluz naranja, relleno violeta
+  const key = new THREE.DirectionalLight(0xfff0dc, 2.6); key.position.set(3.2, 5.5, 4.2); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xff7a1a, 3.4); rim.position.set(-4.5, 2.6, -3.5); scene.add(rim);
+  const relleno = new THREE.PointLight(0x7a4ff0, 26, 14); relleno.position.set(3.4, -0.6, -2.6); scene.add(relleno);
+  const arriba = new THREE.PointLight(0xffd9a8, 14, 10); arriba.position.set(0, 4.5, 1.2); scene.add(arriba);
+
+  // Una luz que "respira" suavemente: la burga se ve viva aunque nadie toque nada
+  const pivote = new THREE.Group(); scene.add(pivote);
+
+  // Sombra de contacto y mancha de luz naranja debajo del plato
+  function texRadial(rgb, aMax) {
+    const c = document.createElement("canvas"); c.width = c.height = 256;
+    const g = c.getContext("2d"), r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+    r.addColorStop(0, `rgba(${rgb},${aMax})`); r.addColorStop(0.55, `rgba(${rgb},${aMax * 0.35})`); r.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = r; g.fillRect(0, 0, 256, 256);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  }
+  const sombra = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 4.2), new THREE.MeshBasicMaterial({ map: texRadial("0,0,0", 0.7), transparent: true, depthWrite: false }));
+  sombra.rotation.x = -Math.PI / 2; sombra.position.y = 0.01; scene.add(sombra);
+  const brillo = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 6.4), new THREE.MeshBasicMaterial({ map: texRadial("242,121,30", 0.5), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  brillo.rotation.x = -Math.PI / 2; brillo.position.y = 0.005; scene.add(brillo);
+
+  // ---- el modelo ----
+  const dracos = new DRACOLoader().setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/");
+  const gltf = new GLTFLoader().setDRACOLoader(dracos);
+  let burga = null, alto = 2.4;
+  const listo = new Promise((ok, mal) => {
+    const viejo = new URLSearchParams(location.search).get("modelo") === "viejo";
+    gltf.load(viejo ? "../../assets/gino-doble.glb" : "gino-doble-hq.glb", (g) => {
+      const m = g.scene;
+      const caja = new THREE.Box3().setFromObject(m), tam = caja.getSize(new THREE.Vector3());
+      const k = alto / tam.y; m.scale.setScalar(k);
+      const caja2 = new THREE.Box3().setFromObject(m), c2 = caja2.getCenter(new THREE.Vector3());
+      m.position.set(-c2.x, -caja2.min.y + 0.02, -c2.z);
+      m.traverse((o) => { if (o.isMesh) { const mt = o.material; mt.metalness = 0; mt.roughness = viejo ? 0.6 : 0.5; mt.envMapIntensity = 0.8; mt.side = THREE.FrontSide;
+        mt.emissive = new THREE.Color(0xffffff); mt.emissiveMap = mt.map; mt.emissiveIntensity = viejo ? 0.42 : 0.22; } });
+      burga = m; pivote.add(m); ok();
+    }, (e) => { if (e.total) carga.style.transform = `scaleX(${e.loaded / e.total})`; }, mal);
+  });
+
+  // ---- humo: hilos que suben y se retuercen (plano con ruido animado, sin partículas) ----
+  function texRuido(n = 256) {
+    const lat = (f, seed) => { const g = new Float32Array(f * f); let s = seed; for (let i = 0; i < g.length; i++) { s = (s * 16807) % 2147483647; g[i] = s / 2147483647; } return g; };
+    const octs = [[4, 1, 11], [8, 0.55, 23], [16, 0.3, 37], [32, 0.15, 51]].map(([f, a, s]) => ({ f, a, g: lat(f, s) }));
+    const v = new Float32Array(n * n); let mn = 9, mx = -9;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      let acc = 0;
+      for (const o of octs) {
+        const fx = x / n * o.f, fy = y / n * o.f, x0 = Math.floor(fx), y0 = Math.floor(fy);
+        const tx = fx - x0, ty = fy - y0, sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+        const x1 = (x0 + 1) % o.f, y1 = (y0 + 1) % o.f, xa = x0 % o.f, ya = y0 % o.f;
+        const a = o.g[ya * o.f + xa], b = o.g[ya * o.f + x1], c = o.g[y1 * o.f + xa], d = o.g[y1 * o.f + x1];
+        acc += o.a * (a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy);
+      }
+      v[y * n + x] = acc; if (acc < mn) mn = acc; if (acc > mx) mx = acc;
+    }
+    const data = new Uint8Array(n * n * 4);
+    for (let i = 0; i < n * n; i++) { const u = Math.round((v[i] - mn) / (mx - mn) * 255); data[i * 4] = data[i * 4 + 1] = data[i * 4 + 2] = u; data[i * 4 + 3] = 255; }
+    const t = new THREE.DataTexture(data, n, n, THREE.RGBAFormat);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = t.minFilter = THREE.LinearFilter; t.needsUpdate = true; return t;
+  }
+  const ruido = texRuido();
+  const vsHumo = `
+    uniform float uTime; uniform sampler2D uRuido;
+    varying vec2 vUv;
+    vec2 giro(vec2 p, float a) { float c = cos(a), s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }
+    void main() {
+      vUv = uv;
+      vec3 p = position;
+      float torsion = texture2D(uRuido, vec2(0.5, uv.y * 0.25 - uTime * 0.012)).r;
+      p.xz = giro(p.xz, (torsion - 0.5) * 7.0 * uv.y);
+      float vx = texture2D(uRuido, vec2(0.2, uTime * 0.02)).r - 0.5;
+      float vz = texture2D(uRuido, vec2(0.7, uTime * 0.02 + 0.3)).r - 0.5;
+      p.xz += vec2(vx, vz) * pow(uv.y, 2.0) * 1.7;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    }`;
+  const fsHumo = `
+    uniform float uTime, uPico, uSemilla; uniform sampler2D uRuido; uniform vec3 uColor;
+    varying vec2 vUv;
+    void main() {
+      // dos capas de ruido que se mueven distinto: el hilo ondula y se parte en volutas
+      vec2 q = vec2(vUv.x * 0.7 + uSemilla, vUv.y * 0.42 - uTime * 0.055);
+      float desvio = texture2D(uRuido, q * 1.7 + vec2(0.0, uTime * 0.03)).r - 0.5;
+      vec2 st = q + vec2(desvio * 0.55, 0.0);
+      float a = texture2D(uRuido, st).r;
+      float b = texture2D(uRuido, st * 2.6 + vec2(0.31, -uTime * 0.035)).r;
+      float humo = smoothstep(0.52, 0.9, a * 0.62 + b * 0.38);
+      float lado = smoothstep(0.0, 0.34, vUv.x) * smoothstep(1.0, 0.66, vUv.x);
+      float alto = smoothstep(0.0, 0.1, vUv.y) * smoothstep(1.0, 0.25, vUv.y);
+      gl_FragColor = vec4(uColor, humo * lado * alto * uPico);
+    }`;
+  const hilos = [];
+  const posHilos = quieta ? [] : celu ? [[0, 0], [0.5, 0.2], [-0.45, -0.25]] : [[0, 0], [0.55, 0.2], [-0.5, -0.2], [0.2, -0.5], [-0.25, 0.45]];
+  posHilos.forEach(([x, z], i) => {
+    const geo = new THREE.PlaneGeometry(2.0, 3.0, 12, 36); geo.translate(0, 1.5, 0);
+    const mat = new THREE.ShaderMaterial({ vertexShader: vsHumo, fragmentShader: fsHumo, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      uniforms: { uTime: { value: 0 }, uRuido: { value: ruido }, uPico: { value: 0.5 }, uSemilla: { value: i * 0.37 }, uColor: { value: new THREE.Color(0xffffff) } } });
+    const m = new THREE.Mesh(geo, mat); m.position.set(x, alto * 0.78, z); scene.add(m); hilos.push(m);
+  });
+  function aplicarVapor() {
+    const c = new THREE.Color(fondo === "noche" ? 0xffffff : 0xd7c4a6), pico = fondo === "noche" ? 0.5 : 0.6;
+    hilos.forEach((m) => { m.material.uniforms.uColor.value.copy(c); m.material.uniforms.uPico.value = pico; });
+  }
+  aplicarVapor();
+
+  // ---- cámara por capítulos (poses elegidas a mano) ----
+  const poses = [
+    { p: 0.00, pos: [0.0, 1.6, 8.0], mira: [0, 1.3, 0], giro: 0.0 },
+    { p: 0.22, pos: [0.0, 4.4, 6.9], mira: [0, 1.1, 0], giro: Math.PI * 0.55 },
+    { p: 0.46, pos: [1.6, 1.8, 6.0], mira: [0, 1.25, 0], giro: Math.PI * 1.1 },
+    { p: 0.72, pos: [-2.8, 0.9, 6.4], mira: [0, 1.3, 0], giro: Math.PI * 1.65 },
+    { p: 1.00, pos: [0.0, 1.6, 8.2], mira: [0, 1.3, 0], giro: Math.PI * 2.0 },
+  ];
+  const suave = (t) => t * t * (3 - 2 * t);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function poseEn(p) {
+    let i = 0; while (i < poses.length - 2 && p > poses[i + 1].p) i++;
+    const a = poses[i], b = poses[i + 1], t = suave(Math.max(0, Math.min(1, (p - a.p) / (b.p - a.p))));
+    return { pos: a.pos.map((v, k) => lerp(v, b.pos[k], t)), mira: a.mira.map((v, k) => lerp(v, b.mira[k], t)), giro: lerp(a.giro, b.giro, t) };
+  }
+
+  // ---- tamaño ----
+  let distMin = 0;                       // distancia mínima de la cámara (pantallas angostas)
+  const factorBase = apaisado ? 1.16 : 1; // en escritorio el plato va corrido: un poco más lejos
+  function ajustar() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    const asp = w / h;
+    camara.aspect = asp;
+    // pantallas angostas (celular): campo de visión más abierto y cámara más lejos para que entre el ancho de la burga
+    camara.fov = asp < 1 ? 28 + (1 - asp) * 32 : 28;
+    const mitad = 1.8 / (Math.tan(camara.fov * Math.PI / 360) * Math.min(asp, 1.6));
+    distMin = asp < 1 ? mitad * 0.95 : 0;
+    // en escritorio apaisado el plato va corrido a la derecha para dejar el texto a la izquierda
+    camara.setViewOffset(w, h, apaisado ? -w * 0.2 : 0, 0, w, h);
+    camara.updateProjectionMatrix();
+  }
+  new ResizeObserver(ajustar).observe(canvas); ajustar();
+
+  // ---- puntero: unos grados de inclinación, amortiguados ----
+  const punt = { x: 0, y: 0, ax: 0, ay: 0 };
+  addEventListener("pointermove", (e) => { punt.x = (e.clientX / innerWidth - 0.5) * 2; punt.y = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
+  addEventListener("deviceorientation", (e) => { if (e.gamma == null) return; punt.x = Math.max(-1, Math.min(1, e.gamma / 30)); punt.y = Math.max(-1, Math.min(1, (e.beta - 45) / 30)); }, { passive: true });
+
+  // ---- bucle ----
+  let prog = 0, progSuave = 0, ultimo = performance.now(), visible = true;
+  document.addEventListener("visibilitychange", () => { visible = !document.hidden; ultimo = performance.now(); });
+  function cuadro(ahora) {
+    requestAnimationFrame(cuadro);
+    if (!visible || !burga) return;
+    const dt = Math.min(0.05, (ahora - ultimo) / 1000); ultimo = ahora;
+    progSuave += (prog - progSuave) * Math.min(1, dt * 6);
+    const pz = poseEn(progSuave), t = ahora / 1000;
+    punt.ax += (punt.x - punt.ax) * Math.min(1, dt * 3); punt.ay += (punt.y - punt.ay) * Math.min(1, dt * 3);
+
+    pivote.rotation.y = pz.giro + punt.ax * 0.18 + Math.sin(t * 0.5) * 0.04;
+    pivote.rotation.x = punt.ay * 0.05;
+    pivote.position.y = Math.sin(t * 1.1) * 0.035;
+    const vx = pz.pos[0] - pz.mira[0], vy = pz.pos[1] - pz.mira[1], vz = pz.pos[2] - pz.mira[2];
+    const f = Math.max(factorBase, distMin / Math.hypot(vx, vy, vz));
+    camara.position.set(pz.mira[0] + vx * f, pz.mira[1] + vy * f, pz.mira[2] + vz * f);
+    camara.lookAt(pz.mira[0], pz.mira[1], pz.mira[2]);
+    rim.intensity = 3.4 + Math.sin(t * 0.8) * 0.5;
+
+    for (const m of hilos) {
+      m.material.uniforms.uTime.value = t;
+      m.rotation.y = Math.atan2(camara.position.x - m.position.x, camara.position.z - m.position.z);
+    }
+    renderer.render(scene, camara);
+  }
+
+  // ---- scroll → progreso, textos y cierre ----
+  const limitar = (v) => Math.max(0, Math.min(1, v));
+  if (!quieta) {
+    escenario(document.querySelector("[data-escenario]"), (p) => {
+      prog = p;
+      const { indice, local } = capitulos(p, [0, 0.12, 0.34, 0.60, 0.84, 1]);
+      titulo.style.opacity = limitar(1 - p / 0.1).toFixed(3);
+      ayuda.style.opacity = limitar(1 - p / 0.06).toFixed(3);
+      caps.forEach((c, i) => {
+        const o = indice === i + 1 ? Math.min(1, local * 5, (1 - local) * 5) : 0;
+        c.style.opacity = o.toFixed(3); c.style.transform = `translateY(${((1 - o) * 10).toFixed(1)}px)`;
+      });
+      const k = limitar((p - 0.86) / 0.1);
+      cierre.style.opacity = k.toFixed(3); cierre.style.transform = `translateY(${((1 - k) * 14).toFixed(1)}px)`;
+      cierre.style.visibility = k > 0 ? "visible" : "hidden";
+    });
+  }
+
+  // ---- arranque ----
+  try {
+    await listo;
+    carga.style.opacity = 0;
+    requestAnimationFrame(cuadro);
+    // un par de cuadros antes de sacar el póster: sin parpadeo
+    setTimeout(() => poster.classList.add("fuera"), 250);
+    window.__listo = true;
+  } catch (e) {
+    console.warn("3D no disponible, queda el póster", e);
+    carga.style.opacity = 0;
+  }
+</script>
+</body>
+</html>

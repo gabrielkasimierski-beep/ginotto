@@ -67,3 +67,19 @@ al hero viejo; la carta, la barra de categorías y todo el sistema de pedidos qu
 3. Mover: `cuadros.js` + `motor-scroll.js` (`escenario`, `conScroll`, `capitulos`).
 4. Revisar con `motor:revisar-sitio` y `00-Motor/control-calidad.md` a 390, 768 y 1280 px.
 5. Mostrar en el laboratorio (`herramientas-lab/laboratorio.mjs`) y recién ahí pedir OK.
+
+## 8. Carta viva (13-oct-2026, rama `motor/carta-con-vida`)
+
+Decisión de Juanma: la portada y **cada plato de la carta** tienen que sentirse vivos, con la receta que
+funcionó con el vaso: partir de una imagen fotorrealista y sumarle efectos que se mueven. El 3D "de dibujo"
+(modelo generado) se descartó; el visor 3D/AR salió de la página.
+
+| Dónde | Qué pasa | Cómo | Costo |
+|---|---|---|---|
+| Portada | Clip de 5 s de la Gino Doble (queso que chorrea, vapor) + humo en tiempo real | `assets/vida/hero.mp4` (350 KB) + shader | hecho |
+| Burgas / combos / veggie | Clip corto en bucle sobre fondo crema (queso fluyendo) | un clip de 3 s por plato (`CLIPS` en `vida/vida.js`) | 4,5 créditos c/u |
+| Platos sin clip todavía | Foto que se inclina y brilla con el puntero (táctil: brillo que pasa solo) | `inclinar()` | gratis |
+| Bebidas (6) | Vaso que suda: niebla, gotas, gas, espuma en la cola; se limpia con el mouse o un toque | `vasoVivo()` + imagen por bebida | 0,25 c/u (hecho) |
+
+Reglas: todo se apaga con "reducir movimiento"; nada toca `app.js`/`cart.js`/precios (vida.js se engancha a
+`.card[data-item]`); clips solo reproducen mientras están en pantalla.

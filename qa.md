@@ -1,4 +1,7 @@
-# QA — Ginotto Burger (rama `motor/portada-integrada`)
+# QA — Ginotto Burger
+
+> Nota 13-oct: este informe es de la rama `motor/portada-integrada` (portada con película). La rama `motor/carta-con-vida`
+> cambió la portada por un clip con humo y sumó vasos vivos; hay que repetir el control antes de mostrar.
 
 > Control de calidad del Motor (`00-Motor/control-calidad.md`) medido sobre el sitio local a 390 px, con
 > `herramientas-lab/pruebas/control-calidad.mjs` (y `portada-integrada.mjs` para película, carta y pedido).

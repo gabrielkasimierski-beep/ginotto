@@ -26,46 +26,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Permanent+Marker&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="vida/vida.css">
 </head>
 <body>
 
 <div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
-<header class="peli" id="top">
-  <!-- Portada con película: la Gino Doble se arma y se desarma con el scroll (kit del Motor: kit/cuadros.js).
-       Sin JS o sin cuadros queda el póster y la página funciona igual. -->
-  <div class="peli-pista" data-escenario>
-    <div class="peli-escena" data-escena>
-      <img class="peli-poster" id="peli-poster" src="assets/pelicula/poster.jpg" alt="Gino Doble: doble carne smash, cheddar y bacon" width="600" height="1062" fetchpriority="high">
-      <canvas class="peli-canvas" id="peli-canvas" aria-hidden="true"></canvas>
-
-      <div class="peli-barra">
-        <a class="peli-marca" href="#top" aria-label="Ginotto Burger"><img src="assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
-        <a class="btn peli-pedir" href="#carta">Pedir</a>
-      </div>
-
-      <div class="peli-titulo" id="peli-titulo">
-        <p class="kicker">Hamburguesería · Villa Urquiza</p>
-        <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
-      </div>
-
-      <div class="peli-caps" aria-hidden="true">
-        <p class="peli-cap"><b>Doble</b> carne smash</p>
-        <p class="peli-cap"><b>Cheddar</b> y bacon Sugardale</p>
-        <p class="peli-cap"><b>Aderezo</b> Gino</p>
-        <div class="peli-puntos"><i></i><i></i><i></i></div>
-      </div>
-
-      <div class="peli-cierre" id="peli-cierre">
-        <p class="peli-precio"><b>Gino Doble</b> · $18.000</p>
-        <a class="btn btn-big" href="#carta">Pedir ahora</a>
-        <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
-      </div>
-
-      <div class="peli-carga" aria-hidden="true"><i id="peli-carga"></i></div>
-    </div>
+<header class="hv" id="top">
+  <!-- Portada viva: clip de la Gino Doble (assets/vida/hero.mp4) con humo en tiempo real (vida/vida.js).
+       Sin JS o con "reducir movimiento" queda el póster y la página funciona igual. -->
+  <div class="hv-medio" data-hero-video="assets/vida/hero.mp4">
+    <img class="hv-poster" src="assets/vida/hero-poster.jpg" alt="Gino Doble: doble carne, cheddar y bacon" width="720" height="964" fetchpriority="high">
   </div>
-  <div class="drip"></div>
+  <div class="hv-barra">
+    <a class="hv-marca" href="#top" aria-label="Ginotto Burger"><img src="assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
+    <a class="btn hv-pedir" href="#carta">Pedir</a>
+  </div>
+  <div class="hv-texto">
+    <p class="kicker">Hamburguesería · Villa Urquiza</p>
+    <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
+  </div>
+  <div class="hv-cta">
+    <p class="hv-precio"><b>Gino Doble</b> · $18.000</p>
+    <a class="btn btn-big" href="#carta">Pedir ahora</a>
+    <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+  </div>
 </header>
+<div class="drip"></div>
 
 <nav class="cats" aria-label="Categorías de la carta">
   <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#acompanamiento">Acompañamiento</a><a href="#extra">Extra</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a>
@@ -76,22 +62,6 @@
     <h2 class="title"><span>Burgas</span></h2>
     <p class="sub">Carne smash, cheddar y mucha actitud. Simple o doble.</p>
     <div class="grid" id="grid-burgas"></div>
-    <!-- Visor 3D + AR de la Gino Doble. La librería y el modelo (~1,2 MB) se piden recién cuando la sección
-         está por aparecer (ver el script del final), así no compiten con la película ni con la carta. -->
-    <div id="gino-3d" class="viewer3d">
-      <h3>Mirá la Gino Doble en 3D</h3>
-      <p class="sub">Girala con el dedo y tocá <strong>«Ver en tu mesa»</strong> para ponerla en AR.</p>
-      <div id="gino-3d-slot">
-        <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D" loading="lazy"
-          ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
-          camera-controls auto-rotate touch-action="pan-y"
-          shadow-intensity="1" exposure="1.1"
-          poster="assets/gino-doble-cream.webp"
-          style="width:100%;height:60vh;max-height:520px;--poster-color:transparent;background:transparent">
-          <button slot="ar-button" class="ar-btn">📱 Ver en tu mesa</button>
-        </model-viewer>
-      </div>
-    </div>
   </section>
 
   <section id="veggie" class="sec">
@@ -181,83 +151,10 @@
 <script src="store.js"></script>
 <script src="app.js"></script>
 <script src="cart.js"></script>
-<script type="module">
-  import { escenario, capitulos, reducido } from "./kit/motor-scroll.js";
-  import { crearCuadros, conScroll } from "./kit/cuadros.js";
-
-  const pista = document.querySelector(".peli-pista");
-  const canvas = document.getElementById("peli-canvas");
-  const poster = document.getElementById("peli-poster");
-  const titulo = document.getElementById("peli-titulo");
-  const capsCaja = document.querySelector(".peli-caps");
-  const caps = [...document.querySelectorAll(".peli-cap")];
-  const puntos = [...document.querySelectorAll(".peli-puntos i")];
-  const cierre = document.getElementById("peli-cierre");
-  const carga = document.getElementById("peli-carga");
-
-  // Visor 3D: se carga la librería solo cuando la sección está por entrar en pantalla (versión fija, no "latest")
-  const visor = document.getElementById("gino-3d");
-  if (visor) {
-    const traerVisor = () => {
-      if (document.getElementById("visor-3d-lib")) return;
-      const s = document.createElement("script");
-      s.type = "module"; s.id = "visor-3d-lib";
-      s.src = "https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js";
-      document.head.appendChild(s);
-    };
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((es) => { if (es.some(e => e.isIntersecting)) { traerVisor(); io.disconnect(); } }, { rootMargin: "1200px 0px" });
-      io.observe(visor);
-    } else traerVisor();
-  }
-
-  // El precio sale de la carta (menu-data.js): una sola fuente
-  try {
-    const g = MENU.find(i => i.id === "gino-doble");
-    if (g) cierre.querySelector(".peli-precio").innerHTML = `<b>${g.n}</b> · ${fmt(g.p)}`;
-  } catch (e) {}
-
-  if (reducido()) {
-    // "Reducir movimiento": un solo cuadro quieto, título y cierre ya puestos, sin pista larga
-    document.documentElement.classList.add("peli-quieta");
-  } else {
-    // Cuadros verticales: en celular ocupan todo ("cubrir"); en pantallas más anchas van enteros en su columna
-    // ("contener"). El corte es el mismo de style.css (min-aspect-ratio 13/20).
-    const columna = matchMedia("(min-aspect-ratio: 13/20)").matches;
-    // Versión liviana (45 cuadros más chicos, ~1,9 MB y ~60 MB en memoria en vez de ~6 MB y ~230 MB):
-    // ahorro de datos, conexión 2G/3G o equipo con 2 GB de RAM o menos. "?liviana" la fuerza para probarla.
-    const red = navigator.connection || {};
-    const liviana = location.search.includes("liviana") || red.saveData === true ||
-      /^(slow-2g|2g|3g)$/.test(red.effectiveType || "") || (navigator.deviceMemory || 8) <= 2;
-    const pelicula = crearCuadros(canvas, {
-      fuente: liviana ? "assets/pelicula/liviana/toma-####.webp" : "assets/pelicula/toma-####.webp",
-      total: liviana ? 45 : 90, encaje: columna ? "contener" : "cubrir", foco: [0.5, 0.52],
-      alCargar: p => { carga.style.transform = `scaleX(${p})`; if (p >= 1) carga.style.opacity = 0; },
-    });
-    // En cuanto hay un cuadro el póster se va; si no carga nada queda el póster y la página funciona igual
-    pelicula.lista.then(() => poster.classList.add("fuera")).catch(() => { carga.style.opacity = 0; });
-    conScroll(pelicula, pista, { suavizar: 0.12 });
-
-    const limitar = v => Math.max(0, Math.min(1, v));
-    escenario(pista, p => {
-      // 0 = portada, 1 a 3 = capítulos, 4 = cierre
-      const { indice, local } = capitulos(p, [0, 0.12, 0.40, 0.68, 0.84, 1]);
-      titulo.style.opacity = limitar(1 - p / 0.14);
-      caps.forEach((c, i) => {
-        const o = indice === i + 1 ? Math.min(1, local * 5, (1 - local) * 5) : 0;
-        c.style.opacity = o.toFixed(3);
-        c.style.transform = `translateY(${((1 - o) * 10).toFixed(1)}px)`;
-      });
-      puntos.forEach((d, i) => d.classList.toggle("on", indice > i));
-      const k = limitar((p - 0.86) / 0.1);
-      cierre.style.opacity = k.toFixed(3);
-      cierre.style.transform = `translateY(${((1 - k) * 14).toFixed(1)}px)`;
-      cierre.classList.toggle("on", k > 0.6);
-      // invisible = fuera del orden de tabulación (si no, con teclado se llega a un botón que no se ve)
-      cierre.style.visibility = k > 0 ? "visible" : "hidden";
-      capsCaja.style.opacity = (1 - k).toFixed(3);
-    });
-  }
+<script type="module" src="vida/vida.js"></script>
+<script>
+  // El precio de la portada sale de la carta (menu-data.js): una sola fuente
+  try { const g = MENU.find(i => i.id === "gino-doble"); if (g) document.querySelector(".hv-precio").innerHTML = `<b>${g.n}</b> · ${fmt(g.p)}`; } catch (e) {}
 </script>
 </body>
 </html>

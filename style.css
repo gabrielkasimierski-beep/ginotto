@@ -20,57 +20,33 @@ a{color:inherit}
 h1{font-family:'Luckiest Guy',cursive;font-weight:400;margin:4px 0 18px;line-height:.95;font-size:clamp(2.6rem,10vw,5.2rem);text-transform:uppercase;color:var(--ink)}
 h1 span{display:block;color:var(--vio);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:5px 5px 0 var(--ora)}
 h1 em{display:block;font-style:normal;color:var(--ora);text-shadow:4px 4px 0 var(--ink);font-size:.8em}
-.peli{position:relative;text-align:center}
-.peli-pista{--largo:360vh}
-.peli-escena{background:var(--cream)}
-.peli-poster,.peli-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.peli-poster{object-fit:cover;transition:opacity .5s}
-.peli-poster.fuera{opacity:0;pointer-events:none}
-.peli-barra{position:absolute;z-index:8;inset:0 0 auto 0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px}
-.peli-marca{display:flex;align-items:center;gap:.5rem;font-family:'Luckiest Guy',cursive;font-size:1.35rem;letter-spacing:.02em;color:var(--vio);text-decoration:none}
-.peli-marca img{width:44px;height:44px;border-radius:50%}
-.peli .peli-pedir{background:var(--ora);color:#fff;font-size:1.05rem;padding:.5em 1.1em;text-shadow:1px 1px 0 var(--ink)}
-.peli-titulo{position:absolute;z-index:5;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 74px);padding:0 16px;pointer-events:none}
-.peli-titulo h1{margin:0}
-.peli-caps{position:absolute;z-index:6;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:grid;justify-items:center;gap:.5rem;pointer-events:none}
-.peli-cap{grid-area:1/1;margin:0;opacity:0;transform:translateY(10px);padding:.5em 1.1em;border-radius:14px;background:rgba(251,243,225,.94);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--vio);font-family:'Permanent Marker',cursive;color:var(--ink);font-size:clamp(1rem,4.2vw,1.35rem)}
-.peli-cap b{color:#A84A06;font-weight:400}
-.peli-puntos{display:flex;gap:7px}
-.peli-puntos i{width:9px;height:9px;border-radius:50%;border:2px solid var(--ink);transition:background .3s}
-.peli-puntos i.on{background:var(--ora)}
-.peli-cierre{position:absolute;z-index:7;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:grid;justify-items:center;gap:.55rem;opacity:0;transform:translateY(14px);pointer-events:none}
-.peli-cierre.on{pointer-events:auto}
-.peli-precio{margin:0;padding:.35em .9em;border-radius:12px;background:rgba(251,243,225,.94);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--vio);font-family:'Permanent Marker',cursive;font-size:1.15rem}
-.peli-precio b{color:#A84A06;font-weight:400}
-.peli-cierre .fudo-link{margin:0;background:rgba(251,243,225,.85);padding:.1em .6em;border-radius:8px}
-.peli-carga{position:absolute;z-index:9;left:0;right:0;top:0;height:4px}
-.peli-carga i{display:block;height:100%;background:var(--ora);transform-origin:0 50%;transform:scaleX(0);transition:opacity .4s}
-/* Cuadros verticales (9:16). En celular ocupan toda la pantalla. Con una pantalla más ancha que un celular
-   (tablet, ventana angosta) van enteros en una columna centrada, con el borde difuminado contra el papel. */
-@media (min-aspect-ratio:13/20){
- .peli-poster,.peli-canvas{left:0;right:0;margin-inline:auto;width:min(100%,calc(100svh * .565));object-fit:contain;
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%),linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);
-  -webkit-mask-composite:source-in;
-  mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%),linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);
-  mask-composite:intersect}
-}
-/* Escritorio y apaisado: la columna pasa a la derecha y el texto queda a la izquierda sobre crema limpia */
+/* portada viva: clip de la burga con humo (vida/vida.js) */
+.hv{position:relative;height:100vh;height:100svh;min-height:560px;background:#0c0907;color:#fff;overflow:hidden;text-align:center}
+.hv-medio{position:absolute;inset:0;overflow:hidden}
+.hv-medio .vv,.hv-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hv-poster{transition:opacity .6s}
+.hv-medio.clip-listo .hv-poster{opacity:0}
+.hv-barra{position:absolute;z-index:6;inset:0 0 auto 0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px}
+.hv-marca{display:flex;align-items:center;gap:.5rem;font-family:'Luckiest Guy',cursive;font-size:1.35rem;letter-spacing:.02em;text-decoration:none;color:#fff}
+.hv-marca img{width:44px;height:44px;border-radius:50%}
+.hv .hv-pedir{background:var(--ora);color:#fff;font-size:1.05rem;padding:.5em 1.1em;text-shadow:1px 1px 0 var(--ink)}
+.hv-texto{position:absolute;z-index:6;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 74px);padding:0 16px;pointer-events:none}
+.hv-texto h1{margin:0}
+.hv .kicker{color:#ffb066}
+.hv h1 span{color:#fff}
+.hv-cta{position:absolute;z-index:6;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);display:grid;justify-items:center;gap:.5rem}
+.hv-precio{margin:0;padding:.3em .9em;border-radius:12px;background:rgba(251,243,225,.96);color:var(--ink);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--vio);font-family:'Permanent Marker',cursive;font-size:1.15rem}
+.hv-precio b{color:#A84A06;font-weight:400}
+.hv .fudo-link{margin:0;color:#e9dff5}
+.hv .fudo-link a{color:#fff}
 @media (min-aspect-ratio:1/1){
- .peli-poster,.peli-canvas{left:auto;right:clamp(1rem,7vw,8rem);margin-inline:0;width:min(calc(100vh * .565),46vw)}
- .peli-barra{padding-inline:28px}
- .peli-titulo,.peli-caps,.peli-cierre{left:0;right:auto;top:0;bottom:0;width:min(44vw,34rem);margin-left:clamp(1.5rem,6vw,5rem);display:grid;align-content:center;justify-items:start;text-align:left;padding:0}
- .peli-titulo h1{font-size:clamp(3rem,6.2vw,6rem)}
- .peli-titulo .kicker{font-size:1.25rem}
- .peli-cap{text-align:left;font-size:clamp(1.5rem,2.6vw,2.4rem);padding:.6em 1em}
- .peli-puntos{margin-top:1.2rem}
-}
-/* "Reducir movimiento": sin pista larga, un cuadro quieto con el título y el cierre ya puestos */
-.peli-quieta .peli-pista{--largo:100svh}
-.peli-quieta .peli-caps{display:none}
-.peli-quieta .peli-cierre{opacity:1;transform:none;pointer-events:auto}
-@media (min-aspect-ratio:1/1){
- .peli-quieta .peli-titulo{bottom:50%;align-content:end;padding-bottom:1rem}
- .peli-quieta .peli-cierre{top:50%;align-content:start;padding-top:1rem}
+ .hv-medio{left:auto;right:clamp(1rem,6vw,7rem);width:min(calc(100svh * .747),46vw);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+ .hv-barra{padding-inline:28px}
+ .hv-texto,.hv-cta{left:clamp(1.5rem,6vw,5rem);right:auto;width:min(40vw,32rem);top:0;bottom:0;display:grid;align-content:center;justify-items:start;text-align:left;padding:0}
+ .hv-texto h1{font-size:clamp(3rem,5.6vw,5.6rem)}
+ .hv-texto .kicker{font-size:1.25rem}
+ .hv-cta{align-content:end;padding-bottom:12vh}
 }
 .drip{height:46px;background:var(--vio);position:relative;z-index:2;
  -webkit-mask:radial-gradient(22px 30px at 22px 0,#000 98%,#0000) 0 0/44px 100%;mask:radial-gradient(22px 30px at 22px 0,#000 98%,#0000) 0 0/44px 100%}

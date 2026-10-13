@@ -1,7 +1,19 @@
 # QA — Ginotto Burger
 
-> Nota 13-oct: este informe es de la rama `motor/portada-integrada` (portada con película). La rama `motor/carta-con-vida`
-> cambió la portada por un clip con humo y sumó vasos vivos; hay que repetir el control antes de mostrar.
+> Nota 13-oct: el detalle de abajo es de la rama `motor/portada-integrada` (portada con película). La rama
+> `motor/carta-con-vida` cambió la portada por un clip con humo y sumó vasos vivos y clips en burgas, combos y papas.
+> Medición repetida hoy sobre `carta-con-vida` (390 px, recorriendo toda la página), con `control-calidad.mjs` y
+> `carta-viva.mjs`:
+> - ✅ Cero errores de consola, cero enlaces a `#`, cero anclas rotas, sin scroll horizontal, cero tocables < 44 px,
+>   todas las imágenes con `width`/`height` y `alt`, foco visible.
+> - ✅ Pedido de punta a punta (agregar → "Ver pedido" con total).
+> - ⚠️ Peso recorriendo toda la carta: ≈ 4,7 MB (imágenes ≈ 2,6 MB + clips ≈ 2,0 MB). Los clips y las fotos
+>   se piden recién al acercarse; la portada sola pesa mucho menos. Cada clip ≈ 200 KB; solo `hero.mp4` (339 KB)
+>   pasa los 300 KB.
+> - ⚠️ Texto < 16 px: los 3 sellos de la portada (15,2 px, decorativos), un enlace y la letra legal del pie.
+> - ❌ Sin `og:image` / `og:url` / `sitemap.xml` hasta tener el dominio real (sigue pendiente).
+> - Sigue pendiente de arriba: honeypot del formulario, aviso de privacidad, analítica, contraste naranja/blanco 2,8:1,
+>   prueba en un celu de verdad (sobre todo iPhone: los clips de vida usan `playsinline`, sin probar en aparato).
 
 > Control de calidad del Motor (`00-Motor/control-calidad.md`) medido sobre el sitio local a 390 px, con
 > `herramientas-lab/pruebas/control-calidad.mjs` (y `portada-integrada.mjs` para película, carta y pedido).

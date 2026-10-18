@@ -1,0 +1,29 @@
+/* Ginotto · carta viva — estilos de vida/vida.js */
+.stage .vv, .stage .vaso-vivo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .25s; }
+.stage .vaso-vivo { touch-action: pan-y; cursor: crosshair; }
+.card:hover .stage .vv, .card:hover .stage .vaso-vivo { transform: scale(1.03); }
+.soldout .stage .vv, .soldout .stage .vaso-vivo { filter: grayscale(.85); opacity: .45; }
+/* pista en el primer vaso, hasta que alguien lo toca */
+#grid-bebidas .card:first-child .stage.vaso:not(.tocado)::after {
+  content: "☝ Limpiá el vidrio"; position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%); white-space: nowrap; z-index: 2;
+  padding: .35em .9em; border-radius: 99px; background: rgba(251,243,225,.95); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--vio);
+  font-family: 'Permanent Marker', cursive; font-size: 1rem; pointer-events: none; animation: late 1.6s ease-in-out infinite;
+}
+@keyframes late { 50% { transform: translateX(-50%) translateY(-4px); } }
+/* brillo que acompaña al puntero (o pasa solo en pantallas táctiles) */
+.stage .brillo { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .25s;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255,255,255,.55), rgba(255,255,255,0) 46%); mix-blend-mode: soft-light; }
+.stage.con-brillo img { will-change: transform; transition: transform .18s ease-out; }
+@media (hover: none) {
+  .stage .brillo { opacity: 1; background: linear-gradient(115deg, rgba(255,255,255,0) 38%, rgba(255,255,255,.5) 50%, rgba(255,255,255,0) 62%);
+    background-size: 260% 100%; background-position: 140% 0; animation: pasa 7s ease-in-out infinite; }
+  .card:nth-child(2n) .stage .brillo { animation-delay: 2.3s; }
+  .card:nth-child(3n) .stage .brillo { animation-delay: 4.6s; }
+}
+@keyframes pasa { 0%, 70% { background-position: 140% 0; } 100% { background-position: -40% 0; } }
+@media (prefers-reduced-motion: reduce) { .stage .brillo { display: none; } }
+
+/* acompañamientos con clip: la caja hereda borde y sombra de .pic; la foto y el clip la llenan */
+.pic-clip { position: relative; overflow: hidden; aspect-ratio: 1 / 1; height: auto; }
+.pic-clip .pic-in { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.pic-clip .vv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }

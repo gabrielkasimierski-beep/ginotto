@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ginotto — Prueba: el vaso que suda</title>
+<meta name="theme-color" content="#F8E6CB">
+<link rel="icon" href="../../assets/logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700&family=Luckiest+Guy&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root { --vio:#4B2E83; --ora:#F2791E; --ink:#1d1428; --papel:#F8E6CB; }
+  *,*::before,*::after { box-sizing: border-box; }
+  body { margin: 0; min-height: 100svh; background: var(--papel); color: var(--ink); font: 500 17px/1.4 'Barlow', system-ui, sans-serif; overflow-x: clip; }
+  a { color: inherit; text-decoration: none; }
+  .hero { min-height: 100svh; display: grid; align-items: center; gap: 0; position: relative; overflow: hidden;
+    grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .barra { display: flex; align-items: center; justify-content: space-between; padding: calc(env(safe-area-inset-top, 0px) + 10px) 18px 6px; position: relative; z-index: 5; }
+  .marca { display: flex; align-items: center; gap: .5rem; font-family: 'Luckiest Guy', cursive; font-size: 1.35rem; color: var(--vio); }
+  .marca img { width: 44px; height: 44px; border-radius: 50%; }
+  .btn { display: inline-block; font-family: 'Luckiest Guy', cursive; letter-spacing: .04em; padding: .6em 1.3em; border-radius: 14px; border: 3px solid var(--ink);
+    background: var(--ora); color: #fff; text-shadow: 2px 2px 0 var(--ink); box-shadow: 4px 4px 0 var(--ink); font-size: 1.1rem; transition: transform .12s, box-shadow .12s; }
+  .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+  .cuerpo { display: grid; grid-template-columns: 1fr; align-items: center; gap: 0; padding: 0 0 18px; }
+  .texto { padding: 6px 18px 0; text-align: center; position: relative; z-index: 3; }
+  .kicker { font-family: 'Permanent Marker', cursive; color: var(--vio); font-size: 1.15rem; margin: 0 0 .2rem; }
+  h1 { font-family: 'Luckiest Guy', cursive; font-weight: 400; margin: 0; line-height: .95; font-size: clamp(3rem, 14vw, 6.4rem); text-transform: uppercase; color: var(--vio);
+    -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 5px 5px 0 var(--ora); }
+  .sub { font-family: 'Permanent Marker', cursive; color: #5b4a6b; margin: .7rem 0 1rem; font-size: 1.1rem; }
+  .vitrina { position: relative; width: min(100%, 520px); margin: 0 auto; aspect-ratio: 880 / 1168; }
+  #vaso { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 95%, transparent 100%); mask-composite: intersect; }
+  .pista { position: absolute; z-index: 4; left: 50%; bottom: 7%; transform: translateX(-50%); padding: .45em 1em; border-radius: 99px; background: rgba(251,243,225,.95); border: 3px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--vio); font-family: 'Permanent Marker', cursive; font-size: 1.05rem; white-space: nowrap; pointer-events: none; animation: late 1.6s ease-in-out infinite; transition: opacity .5s; }
+  .pista.fuera { opacity: 0; animation: none; }
+  @keyframes late { 50% { transform: translateX(-50%) translateY(-5px); } }
+  .nota { position: absolute; z-index: 6; left: 12px; bottom: 12px; font: 600 .8rem 'Barlow', sans-serif; opacity: .7; }
+
+  @media (min-width: 900px) {
+    .cuerpo { grid-template-columns: 1fr 1fr; padding-inline: clamp(1.5rem, 6vw, 5rem); }
+    .texto { text-align: left; padding: 0; }
+    .vitrina { width: min(100%, calc(88svh * 880 / 1168)); margin: 0 0 0 auto; }
+    h1 { font-size: clamp(3.4rem, 7vw, 7rem); }
+  }
+</style>
+</head>
+<body>
+<main class="hero">
+  <div class="barra">
+    <a class="marca" href="../../index.html" aria-label="Ginotto Burger"><img src="../../assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
+    <a class="btn" href="../../index.html#bebidas">Bebidas</a>
+  </div>
+  <div class="cuerpo">
+    <div class="texto">
+      <p class="kicker">Bebidas · Ginotto</p>
+      <h1>Bien fría</h1>
+      <p class="sub">Pasá el dedo por el vaso.</p>
+      <a class="btn" href="../../index.html#bebidas">Ver bebidas</a>
+    </div>
+    <div class="vitrina">
+      <canvas id="vaso" role="img" aria-label="Vaso de gaseosa con hielo, empañado y con la jirafa de Ginotto estampada. Pasando el dedo se limpia el vidrio."></canvas>
+      <div class="pista" id="pista">☝ Limpiá el vidrio</div>
+    </div>
+  </div>
+</main>
+<p class="nota">Prueba · imagen generada con IA</p>
+
+<script type="module">
+  const canvas = document.getElementById("vaso"), pista = document.getElementById("pista");
+  const quieta = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const img = new Image(); img.src = "vaso.webp"; await img.decode();
+  const W = img.naturalWidth, H = img.naturalHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  const lienzo = (w = W, h = H) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+
+  // Silueta del vidrio (trapecio suave): el empañado solo vive ahí
+  const sil = lienzo(); { const g = sil.getContext("2d"); g.filter = "blur(10px)"; g.fillStyle = "#fff"; g.beginPath();
+    g.moveTo(W * 0.245, H * 0.135); g.lineTo(W * 0.765, H * 0.135); g.lineTo(W * 0.74, H * 0.915); g.lineTo(W * 0.27, H * 0.915); g.closePath(); g.fill(); }
+
+  // Empañado: la misma foto desenfocada, lechosa y fría, recortada a la silueta
+  const niebla = lienzo(); { const g = niebla.getContext("2d");
+    g.filter = "blur(13px) brightness(1.3) saturate(.45)"; g.drawImage(img, 0, 0); g.filter = "none";
+    g.fillStyle = "rgba(236,243,248,.58)"; g.fillRect(0, 0, W, H);
+    g.globalCompositeOperation = "destination-in"; g.drawImage(sil, 0, 0); }
+
+  const huecos = lienzo(), hg = huecos.getContext("2d");   // blanco = vidrio limpio
+  const tmp = lienzo(), tg = tmp.getContext("2d");
+
+  function limpiar(x0, y0, x1, y1, ancho, fuerza = 1) {
+    hg.save(); hg.globalCompositeOperation = "source-over"; hg.lineCap = "round"; hg.lineJoin = "round";
+    hg.strokeStyle = `rgba(255,255,255,${fuerza})`; hg.shadowColor = "#fff"; hg.shadowBlur = ancho * 0.45; hg.lineWidth = ancho;
+    hg.beginPath(); hg.moveTo(x0, y0); hg.lineTo(x1, y1); hg.stroke(); hg.restore();
+  }
+
+  // Gotas que resbalan: avanzan, se frenan, y van dejando un surco limpio
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const gotas = [];
+  function nuevaGota(arriba = false) {
+    return { x: rnd(W * 0.29, W * 0.72), y: arriba ? rnd(H * 0.15, H * 0.3) : rnd(H * 0.2, H * 0.85), r: rnd(W * 0.0065, W * 0.0155), v: 0, espera: rnd(0, 3), py: 0 };
+  }
+  for (let i = 0; i < 11; i++) gotas.push(nuevaGota());
+  gotas.forEach((d) => d.py = d.y);
+
+  // Gas: burbujas que suben desde el fondo por "hilos" (como en un vaso de verdad) y revientan arriba
+  const k = W / 880;                                   // escala respecto del tamaño de la imagen
+  const hilos = Array.from({ length: 14 }, () => ({ x: rnd(0.33, 0.67), tasa: rnd(5, 11), acum: Math.random() }));
+  const burbujas = [], chispas = [];
+  const SUP = H * 0.205;                               // línea de la superficie (donde está el hielo)
+  function ancho(y) { const t = (y - H * 0.2) / (H * 0.7); return [0.31 + 0.025 * t, 0.69 - 0.025 * t]; } // interior del vidrio según la altura
+  function emitir(h) {
+    const y = H * rnd(0.84, 0.9), [a, b] = ancho(y);
+    burbujas.push({ x: W * Math.max(a, Math.min(b, h.x + rnd(-0.02, 0.02))), y, r: rnd(2.3, 5.4) * k, vy: rnd(80, 170) * H / 1168, fase: rnd(0, 7), amp: rnd(1, 3.5) * k, f: rnd(2, 5), a: rnd(0.55, 0.95) });
+  }
+  function dibujarBurbujas(g, mult = 1) {
+    g.save();
+    for (const b of burbujas) {
+      const rr = b.r * (1 + 0.35 * (1 - (b.y - SUP) / (H * 0.7)));   // crecen un poco al subir
+      g.globalAlpha = b.a * mult;
+      g.lineWidth = Math.max(1, rr * 0.3); g.strokeStyle = "rgba(255,238,205,.95)";
+      g.fillStyle = "rgba(255,255,255,.16)";
+      g.beginPath(); g.arc(b.x, b.y, rr, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = "rgba(255,255,255,.98)";
+      g.beginPath(); g.arc(b.x - rr * 0.35, b.y - rr * 0.38, Math.max(0.8, rr * 0.28), 0, 7); g.fill();
+    }
+    g.globalAlpha = 1;
+    for (const c of chispas) {
+      g.globalAlpha = Math.max(0, c.vida * 1.8) * Math.min(1, mult + 0.3); g.fillStyle = "rgba(255,244,222,.95)";
+      g.beginPath(); g.arc(c.x, c.y, c.r, 0, 7); g.fill();
+    }
+    g.restore();
+  }
+
+  // Pasar el dedo / el mouse
+  let ultimo = null, limpio = false;
+  const aLienzo = (e) => { const r = canvas.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; };
+  function mover(e) {
+    const [x, y] = aLienzo(e);
+    if (x < 0 || y < 0 || x > W || y > H) { ultimo = null; return; }
+    if (ultimo) limpiar(ultimo[0], ultimo[1], x, y, W * 0.085);
+    else limpiar(x, y, x + 0.1, y + 0.1, W * 0.085);
+    ultimo = [x, y];
+    if (!limpio) { limpio = true; pista.classList.add("fuera"); }
+  }
+  canvas.addEventListener("pointermove", mover);
+  canvas.addEventListener("pointerdown", (e) => { ultimo = null; mover(e); canvas.setPointerCapture?.(e.pointerId); });
+  canvas.addEventListener("pointerleave", () => { ultimo = null; });
+  canvas.addEventListener("pointerup", () => { ultimo = null; });
+
+  // Intro: una gota grande baja sola y deja un surco, para que se entienda qué es
+  let intro = quieta ? 0 : 1;
+  const grande = { x: W * 0.5, y: H * 0.19, r: W * 0.02, v: 0, espera: 0.6, py: H * 0.19, grande: true };
+  if (!quieta) gotas.push(grande);
+
+  function gota(g, d) {
+    const r = d.r;
+    g.save(); g.translate(d.x, d.y);
+    // sombra de contacto abajo y reflejo arriba: se lee como agua sobre vidrio
+    const sombra = g.createRadialGradient(0, r * 0.25, r * 0.15, 0, r * 0.25, r * 1.25);
+    sombra.addColorStop(0, "rgba(70,35,10,0)"); sombra.addColorStop(0.7, "rgba(70,35,10,.30)"); sombra.addColorStop(1, "rgba(70,35,10,0)");
+    g.fillStyle = sombra; g.beginPath(); g.ellipse(0, r * 0.2, r * 1.15, r * 1.35, 0, 0, 7); g.fill();
+    const luz = g.createRadialGradient(-r * 0.3, -r * 0.4, r * 0.05, 0, 0, r * 1.05);
+    luz.addColorStop(0, "rgba(255,255,255,.95)"); luz.addColorStop(0.3, "rgba(255,255,255,.28)"); luz.addColorStop(1, "rgba(255,255,255,.06)");
+    g.fillStyle = luz; g.beginPath(); g.ellipse(0, 0, r * 0.85, r * 1.1, 0, 0, 7); g.fill();
+    g.restore();
+  }
+
+  let t0 = performance.now(), cuenta = 0;
+  function cuadro(ahora) {
+    requestAnimationFrame(cuadro);
+    const dt = Math.min(0.05, (ahora - t0) / 1000); t0 = ahora; cuenta++;
+
+    if (!quieta) {
+      for (const d of gotas) {
+        d.py = d.y;
+        if (d.espera > 0) d.espera -= dt;
+        else {
+          d.v = Math.min(d.grande ? H * 0.2 : H * 0.12, d.v + H * 0.5 * dt);
+          d.y += d.v * dt;
+          if (Math.random() < (d.grande ? 0.006 : 0.012)) { d.espera = rnd(0.25, 1.4); d.v = 0; }
+        }
+        if (d.y > H * 0.9) Object.assign(d, nuevaGota(true), { py: 0, grande: false }), d.py = d.y;
+        else if (d.y > d.py) limpiar(d.x, d.py, d.x, d.y, d.r * (d.grande ? 1.6 : 1.15), d.grande ? 0.95 : 0.45);
+      }
+      for (const h of hilos) { h.acum += h.tasa * dt; while (h.acum >= 1) { h.acum -= 1; emitir(h); } }
+      for (let i = burbujas.length - 1; i >= 0; i--) {
+        const b = burbujas[i];
+        b.y -= b.vy * dt * (1 + (H * 0.9 - b.y) / H * 0.8); b.fase += b.f * dt; b.x += Math.sin(b.fase) * b.amp * dt;
+        if (b.y < SUP) {
+          if (Math.random() < 0.55) for (let j = 0; j < 4; j++) chispas.push({ x: b.x, y: SUP, vx: rnd(-26, 26) * k, vy: -rnd(40, 100) * k, r: rnd(0.8, 1.7) * k, vida: rnd(0.25, 0.5) });
+          burbujas.splice(i, 1);
+        }
+      }
+      for (let i = chispas.length - 1; i >= 0; i--) {
+        const c = chispas[i]; c.vida -= dt; c.vy += 260 * k * dt; c.x += c.vx * dt; c.y += c.vy * dt;
+        if (c.vida <= 0) chispas.splice(i, 1);
+      }
+      // el vidrio se vuelve a empañar de a poco
+      if (cuenta % 3 === 0) { hg.save(); hg.globalCompositeOperation = "destination-out"; hg.fillStyle = "rgba(0,0,0,.02)"; hg.fillRect(0, 0, W, H); hg.restore(); }
+    }
+
+    // niebla con huecos
+    tg.globalCompositeOperation = "source-over"; tg.clearRect(0, 0, W, H);
+    tg.drawImage(niebla, 0, 0);
+    tg.globalCompositeOperation = "destination-out"; tg.drawImage(huecos, 0, 0);
+    ctx.globalAlpha = 1; ctx.drawImage(img, 0, 0);
+    if (!quieta) dibujarBurbujas(ctx);
+    ctx.globalAlpha = 0.92; ctx.drawImage(tmp, 0, 0); ctx.globalAlpha = 1;
+    if (!quieta) dibujarBurbujas(ctx, 0.42);   // se adivinan también a través del empañado
+    for (const d of gotas) gota(ctx, d);
+  }
+  requestAnimationFrame(cuadro);
+  window.__listo = true;
+</script>
+</body>
+</html>

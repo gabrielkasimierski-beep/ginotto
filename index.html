@@ -1,39 +1,70 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ginotto Burger — Las mejores que vas a probar</title>
 <meta name="description" content="Ginotto Burger, hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Cheeseburger, Gino, Otto, veggie y combos. Pedí online.">
+<meta name="theme-color" content="#F6EBD3">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Ginotto Burger">
+<meta property="og:title" content="Ginotto Burger — Las mejores que vas a probar">
+<meta property="og:description" content="Hamburguesería en Villa Urquiza (Av. Monroe 3582, CABA). Cheeseburger, Gino, Otto, veggie y combos. Pedí online.">
+<!-- {completar}: og:image y og:url van con la dirección real del sitio (tiene que ser absoluta); hoy no hay dominio definido -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"Ginotto Burger","servesCuisine":"Hamburguesas",
+ "address":{"@type":"PostalAddress","streetAddress":"Av. Monroe 3582","addressLocality":"Villa Urquiza","addressRegion":"CABA","addressCountry":"AR"},
+ "telephone":"+54 11 7887 2874","email":"ginottoburger@gmail.com","sameAs":["https://www.instagram.com/ginotto.ar/"],
+ "openingHoursSpecification":[
+  {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday"],"opens":"11:30","closes":"14:30"},
+  {"@type":"OpeningHoursSpecification","dayOfWeek":["Wednesday","Thursday","Friday","Saturday"],"opens":"11:30","closes":"14:30"},
+  {"@type":"OpeningHoursSpecification","dayOfWeek":["Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"19:30","closes":"23:00"}]}
+</script>
 <link rel="icon" href="assets/logo.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Permanent+Marker&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="vida/vida.css">
 </head>
 <body>
 
 <div id="closed-banner" class="closed-banner" role="status" hidden>Local cerrado ahora &middot; podés ver la carta, pero no enviar pedidos</div>
-<header class="hero" id="top">
+<header class="hv" id="top">
+  <!-- Portada: la Gino Doble en un clip corto (assets/vida/hero.mp4), enmarcada como las tarjetas de la carta.
+       Sin JS o con "reducir movimiento" queda el póster y la página funciona igual. -->
   <svg class="splat s1" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
   <svg class="splat s2" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10c25 0 30 25 52 30s40 25 30 50-5 35-25 55-35 25-55 40-35-20-60-25-45-30-35-55 15-35 25-55 30-30 68-40z"/></svg>
-  <div class="hero-inner">
-    <img class="hero-logo" src="assets/logo.webp" alt="Ginotto Burger, jirafa con gorra violeta" width="450" height="450">
-    <p class="kicker">Hamburguesería · Villa Urquiza</p>
-    <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
-    <div class="hero-cta">
-      <a class="btn btn-big" href="#carta" data-open-checkout>Pedir ahora</a>
-      <a class="btn btn-ghost" href="#carta">Ver la carta</a>
+  <div class="hv-barra">
+    <a class="hv-marca" href="#top" aria-label="Ginotto Burger"><img src="assets/logo.webp" alt="" width="44" height="44">Ginotto</a>
+    <a class="btn hv-pedir" href="#carta">Pedir</a>
+  </div>
+  <div class="hv-grid">
+    <div class="hv-texto">
+      <p class="kicker">Hamburguesería · Villa Urquiza</p>
+      <h1><span>Las mejores</span> <em>que vas a probar</em></h1>
     </div>
-    <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+    <figure class="hv-marco">
+      <div class="hv-vid" data-hero-video="assets/vida/hero.mp4">
+        <img class="hv-poster" src="assets/vida/hero-poster.jpg" alt="Gino Doble: doble carne, cheddar y bacon" width="960" height="960" fetchpriority="high">
+      </div>
+      <span class="sello sello-1">Doble carne smash</span>
+      <span class="sello sello-2">Cheddar y bacon Sugardale</span>
+      <span class="sello sello-3">Aderezo Gino</span>
+    </figure>
+    <div class="hv-cta">
+      <p class="hv-precio"><b>Gino Doble</b> · $18.000</p>
+      <a class="btn btn-big" href="#carta">Pedir ahora</a>
+      <p class="fudo-link">o <a href="https://menu.fu.do/ginotto" target="_blank" rel="noopener">pedí por fu.do</a></p>
+    </div>
   </div>
-  <div class="hero-burgers" aria-hidden="true">
-    <img src="assets/cheese-doble-cream.webp" alt="" class="hb hb1">
-    <img src="assets/gino-doble-cream.webp" alt="" class="hb hb2">
-    <img src="assets/otto-doble-cream.webp" alt="" class="hb hb3">
-  </div>
-  <div class="drip"></div>
+  <div class="hv-cinta" aria-hidden="true"><div class="hv-cinta-pista">
+    <span>Las mejores que vas a probar</span><span>★</span><span>Smash</span><span>★</span><span>Cheddar</span><span>★</span><span>Bacon Sugardale</span><span>★</span><span>Aderezo Gino</span><span>★</span>
+    <span>Las mejores que vas a probar</span><span>★</span><span>Smash</span><span>★</span><span>Cheddar</span><span>★</span><span>Bacon Sugardale</span><span>★</span><span>Aderezo Gino</span><span>★</span>
+  </div></div>
 </header>
+<div class="drip"></div>
 
 <nav class="cats" aria-label="Categorías de la carta">
   <a href="#burgas">Burgas</a><a href="#veggie">Veggie</a><a href="#acompanamiento">Acompañamiento</a><a href="#extra">Extra</a><a href="#combos">Combos</a><a href="#bebidas">Bebidas</a>
@@ -44,25 +75,6 @@
     <h2 class="title"><span>Burgas</span></h2>
     <p class="sub">Carne smash, cheddar y mucha actitud. Simple o doble.</p>
     <div class="grid" id="grid-burgas"></div>
-    <!-- TODO 3D (Opus): visor 3D + AR de la Gino Doble. Proveer assets/gino-doble.glb y reemplazar este bloque
-         (sacar el atributo hidden) con:
-         <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-         <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate shadow-intensity="1" poster="assets/gino-doble-cream.webp"></model-viewer> -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <div id="gino-3d" class="viewer3d">
-      <h3>Mirá la Gino Doble en 3D</h3>
-      <p class="sub">Girala con el dedo y tocá <strong>«Ver en tu mesa»</strong> para ponerla en AR.</p>
-      <div id="gino-3d-slot">
-        <model-viewer src="assets/gino-doble.glb" alt="Gino Doble en 3D"
-          ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
-          camera-controls auto-rotate touch-action="pan-y"
-          shadow-intensity="1" exposure="1.1"
-          poster="assets/gino-doble-cream.webp"
-          style="width:100%;height:60vh;max-height:520px;--poster-color:transparent;background:transparent">
-          <button slot="ar-button" class="ar-btn">📱 Ver en tu mesa</button>
-        </model-viewer>
-      </div>
-    </div>
   </section>
 
   <section id="veggie" class="sec">
@@ -152,5 +164,10 @@
 <script src="store.js"></script>
 <script src="app.js"></script>
 <script src="cart.js"></script>
+<script type="module" src="vida/vida.js"></script>
+<script>
+  // El precio de la portada sale de la carta (menu-data.js): una sola fuente
+  try { const g = MENU.find(i => i.id === "gino-doble"); if (g) document.querySelector(".hv-precio").innerHTML = `<b>${g.n}</b> · ${fmt(g.p)}`; } catch (e) {}
+</script>
 </body>
 </html>
